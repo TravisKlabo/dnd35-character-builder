@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>D&D 3.5 Character Builder</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <h1>D&D 3.5 Builder</h1>
+
+        <section class="panel">
+          <h2>Identity</h2>
+          <label>
+            Character Name
+            <input id="charName" type="text" value="Unnamed Hero" />
+          </label>
+          <label>
+            Player Name
+            <input id="playerName" type="text" value="Player" />
+          </label>
+          <label>
+            Gender Presentation
+            <select id="genderSelect">
+              <option value="unspecified">Unspecified</option>
+              <option value="feminine">Feminine</option>
+              <option value="masculine">Masculine</option>
+              <option value="androgynous">Androgynous</option>
+            </select>
+          </label>
+          <label>
+            Race
+            <select id="raceSelect"></select>
+          </label>
+          <label>
+            Class
+            <select id="classSelect"></select>
+          </label>
+          <label>
+            Level
+            <input id="levelInput" type="number" min="1" max="20" value="1" />
+          </label>
+          <label>
+            Alignment
+            <select id="alignmentSelect">
+              <option>Lawful Good</option>
+              <option>Neutral Good</option>
+              <option>Chaotic Good</option>
+              <option>Lawful Neutral</option>
+              <option>True Neutral</option>
+              <option>Chaotic Neutral</option>
+              <option>Lawful Evil</option>
+              <option>Neutral Evil</option>
+              <option>Chaotic Evil</option>
+            </select>
+          </label>
+          <label>
+            Deity / Allegiance
+            <select id="deitySelect">
+              <option>None selected</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="panel">
+          <h2>Campaign Setting</h2>
+          <label>
+            Ruleset
+            <select id="settingSelect">
+              <option value="core">D&D 3.5 Core</option>
+              <option value="dragonlance">Dragonlance 3.5</option>
+            </select>
+          </label>
+          <label>
+            Krynn Path
+            <select id="krynnPathSelect">
+              <option value="none">No setting path</option>
+              <option value="knight-solamnia">Knight of Solamnia</option>
+              <option value="knight-takhisis">Knight of Takhisis</option>
+              <option value="high-sorcery">Wizard of High Sorcery</option>
+              <option value="wild-magic">Renegade / Wild Magic</option>
+            </select>
+          </label>
+          <label>
+            Moon or Power
+            <select id="moonSelect">
+              <option value="none">None selected</option>
+              <option value="solinari">Solinari (white moon)</option>
+              <option value="lunitari">Lunitari (red moon)</option>
+              <option value="nuitari">Nuitari (black moon)</option>
+              <option value="constellation">Constellation / divine power</option>
+            </select>
+          </label>
+          <label>
+            Prestige Class
+            <select id="prestigeClassSelect">
+              <option value="none">None selected</option>
+              <option value="knight-of-the-crown">Knight of the Crown</option>
+              <option value="knight-of-the-sword">Knight of the Sword</option>
+              <option value="knight-of-the-rose">Knight of the Rose</option>
+              <option value="knight-of-neraka">Knight of Neraka</option>
+              <option value="renegade-hunter">Renegade Hunter</option>
+              <option value="white-robed-wizard">White-Robed Wizard</option>
+              <option value="red-robed-wizard">Red-Robed Wizard</option>
+              <option value="black-robed-wizard">Black-Robed Wizard</option>
+              <option value="master-of-the-way">Master of the Way</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="panel">
+          <h2>Languages</h2>
+          <div id="languagesList" class="language-list"></div>
+        </section>
+
+        <section class="panel">
+          <h2>Ability Scores</h2>
+          <label>
+            Generation Method
+            <select id="abilityModeSelect">
+              <option value="rolled">Roll 4d6, Drop Lowest, Then Assign</option>
+              <option value="point-buy">Point Buy</option>
+              <option value="manual">Manual Entry</option>
+            </select>
+          </label>
+          <label id="pointBuyBudgetLabel">
+            Point-Buy Budget
+            <select id="pointBuyBudgetSelect">
+              <option value="15">15 points</option>
+              <option value="22">22 points</option>
+              <option value="25">25 points</option>
+              <option value="28">28 points</option>
+              <option value="32" selected>32 points</option>
+            </select>
+          </label>
+          <p id="abilityMethodInfo" class="ability-method-info"></p>
+          <div id="abilities" class="ability-grid"></div>
+          <button id="rollStatsBtn" class="primary-btn">Roll 4d6 Drop Lowest</button>
+        </section>
+
+        <section class="panel">
+          <h2 id="skillsHeading">Skills</h2>
+          <div id="skillsList" class="checkbox-list"></div>
+        </section>
+
+        <section class="panel">
+          <h2 id="featsHeading">Feats</h2>
+          <div id="featsList" class="checkbox-list"></div>
+        </section>
+
+        <section class="panel">
+          <h2>Equipment & Magic</h2>
+          <label>
+            Weapon
+            <select id="weaponSelect"></select>
+            <button id="weaponRulesTrigger" class="rules-trigger equipment-rules-trigger" type="button" data-rule-type="weapon" data-rule-name="Longsword">View weapon rules</button>
+            <select id="weaponSizeSelect" aria-label="Weapon size">
+              <option value="auto">Weapon size: Auto</option>
+              <option value="small">Weapon size: Small</option>
+              <option value="medium">Weapon size: Medium</option>
+              <option value="large">Weapon size: Large</option>
+            </select>
+          </label>
+          <label>
+            Armor
+            <select id="armorSelect"></select>
+            <button id="armorRulesTrigger" class="rules-trigger equipment-rules-trigger" type="button" data-rule-type="armor" data-rule-name="Chain Shirt">View armor rules</button>
+          </label>
+          <label>
+            Item
+            <select id="itemSelect"></select>
+          </label>
+        </section>
+
+        <section class="panel">
+          <h2>Spells</h2>
+          <div id="spellList" class="checkbox-list"></div>
+        </section>
+      </aside>
+
+      <main class="main-content">
+        <div class="controls-row">
+          <button id="saveBtn" class="primary-btn">Save</button>
+          <button id="newBtn" class="secondary-btn">Create New</button>
+          <button id="generatePlayerBtn" class="primary-btn">Generate Player Sheet</button>
+          <button id="generateSpellBtn" class="secondary-btn">Generate Spell Sheet</button>
+          <button id="generateItemBtn" class="secondary-btn">Generate Item Sheet</button>
+          <button id="generateSketchBtn" class="secondary-btn">Generate Character Sketch</button>
+          <button id="exportBtn" class="secondary-btn">Export JSON</button>
+          <button id="loadBtn" class="secondary-btn">Load JSON</button>
+          <button id="printBtn" class="accent-btn">Print</button>
+        </div>
+        <input id="importCharacterInput" type="file" accept="application/json" hidden />
+
+        <section id="summaryCard" class="summary-card"></section>
+
+        <section class="sheet-output">
+          <div class="sheet-section" id="playerSheet"></div>
+          <div class="sheet-section" id="spellSheet"></div>
+          <div class="sheet-section" id="itemSheet"></div>
+          <div class="sheet-section" id="sketchSheet"></div>
+        </section>
+      </main>
+    </div>
+
+    <aside id="rulesPopover" class="rules-popover" hidden></aside>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "name": "dnd35-character-builder",
+  "version": "1.0.0",
+  "description": "D&D 3.5 and Dragonlance character builder desktop app",
+  "main": "desktop/main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --linux AppImage deb --win nsis --mac dmg",
+    "dist:linux": "electron-builder --linux AppImage deb",
+    "dist:windows": "electron-builder --win nsis",
+    "dist:macos": "electron-builder --mac dmg"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.dnd35.characterbuilder",
+    "productName": "D&D 3.5 Character Builder",
+    "asar": true,
+    "files": [
+      "index.html",
+      "app.js",
+      "styles.css",
+      "desktop/**/*"
+    ],
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "category": "Game"
+    },
+    "win": {
+      "target": ["nsis"],
+      "artifactName": "DND35-Character-Builder-${version}.${ext}"
+    },
+    "mac": {
+      "target": ["dmg"],
+      "category": "public.app-category.games"
+    }
+  }
+}
