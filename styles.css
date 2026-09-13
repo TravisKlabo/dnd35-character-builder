@@ -704,7 +704,7 @@ input, select {
 
 .combat-grid {
   grid-template-areas: "weapons money" "armor equipment";
-  grid-template-columns: minmax(0, 1.5fr) minmax(220px, 1fr);
+  grid-template-columns: minmax(0, 2.5fr) minmax(154px, 0.7fr);
 }
 
 .combat-weapons { grid-area: weapons; }
