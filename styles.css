@@ -725,6 +725,16 @@ input, select {
   margin: 0 0 18px;
 }
 
+.journal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.journal-notes-box {
+  min-height: 420px;
+}
+
 .skills-abilities-grid {
   grid-template-columns: minmax(0, 1fr) fit-content(280px);
 }
@@ -973,6 +983,10 @@ input, select {
 
   .skills-table-columns .official-table {
     font-size: 0.72rem;
+  }
+
+  .journal-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .sheet-box {

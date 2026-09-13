@@ -457,14 +457,10 @@ const els = {
   equipmentInventory: document.querySelector('#equipmentInventory'),
   summaryCard: document.querySelector('#summaryCard'),
   playerSheet: document.querySelector('#playerSheet'),
-  spellSheet: document.querySelector('#spellSheet'),
-  itemSheet: document.querySelector('#itemSheet'),
   sketchSheet: document.querySelector('#sketchSheet'),
   deedsSheet: document.querySelector('#deedsSheet'),
   rollStatsBtn: document.querySelector('#rollStatsBtn'),
   generatePlayerBtn: document.querySelector('#generatePlayerBtn'),
-  generateSpellBtn: document.querySelector('#generateSpellBtn'),
-  generateItemBtn: document.querySelector('#generateItemBtn'),
   generateSketchBtn: document.querySelector('#generateSketchBtn'),
   choosePortraitBtn: document.querySelector('#choosePortraitBtn'),
   saveBtn: document.querySelector('#saveBtn'),
@@ -2145,81 +2141,18 @@ function renderPlayerSheet() {
           </div>
           </div>
         </div>
-        <div class="sheet-grid official-wide-grid">
-          <div class="sheet-box"><h4>Languages</h4><p>${getAllLanguages().join(', ')}</p></div>
-          <div class="sheet-box"><h4>Deity / Allegiance</h4><p>${state.deity}</p><p>${state.setting === 'dragonlance' ? 'Krynn path: ' + state.krynnPath : 'Allegiance: ____________________'}</p></div>
-        </div>
-        <div class="sheet-box official-notes-box"><h4>Character Notes</h4><p>${notes}</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
       </div>
 
       <div class="official-page official-page-break">
         <div class="sheet-header">
-          <h2>${state.charName} - Spellbook & Spell List</h2>
+          <h2>${state.charName} - Character Journal</h2>
           <span class="badge">Page 5</span>
         </div>
-        <div class="sheet-grid official-wide-grid">
-          <div class="sheet-box"><h4>Spellcasting</h4><p>${spellcastingInfo}</p><p>Spell save DC: __________</p><p>Concentration: ${getSkillTotal('Concentration') >= 0 ? '+' : ''}${getSkillTotal('Concentration')}</p><p>Arcane failure: __________</p></div>
-          <div class="sheet-box"><h4>Spell Slots</h4><p>${getSpellSlotSummary()}</p><p>Bonus spells: ____________________</p></div>
+        <div class="journal-grid">
+          <div class="sheet-box"><h4>Languages</h4><p>${getAllLanguages().join(', ')}</p></div>
+          <div class="sheet-box"><h4>Deity / Allegiance</h4><p>${state.deity}</p><p>${state.setting === 'dragonlance' ? 'Krynn path: ' + state.krynnPath : 'Allegiance: ____________________'}</p></div>
         </div>
-        <div class="sheet-box">
-          <h4>Selected Spells</h4>
-          <table class="official-table"><thead><tr><th>Spell</th><th>Level</th><th>Prepared / Known</th><th>Notes</th></tr></thead><tbody>
-            ${spellCatalog.filter((spell) => state.selectedSpells.includes(spell.name)).map((spell) => `<tr><td>${spell.name}</td><td>${spell.level}</td><td>________________</td><td>________________</td></tr>`).join('') || '<tr><td colspan="4">No spells selected</td></tr>'}
-          </tbody></table>
-        </div>
-        <div class="sheet-box official-notes-box"><h4>Spell Notes</h4><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
-      </div>
-    </div>
-  `;
-}
-
-function renderSpellSheet() {
-  const selectedSpells = spellCatalog.filter((spell) => state.selectedSpells.includes(spell.name));
-  const spellList = selectedSpells.length ? selectedSpells.map((spell) => `<li>${spell.name} (Level ${spell.level})</li>`).join('') : '<li>No spells selected.</li>';
-  const spellSummary = getSpellSlotSummary();
-
-  els.spellSheet.classList.add('active');
-  els.spellSheet.innerHTML = `
-    <div class="sheet-header">
-      <h2>Spell Sheet</h2>
-      <span class="badge">${state.charName}</span>
-    </div>
-    <div class="sheet-grid">
-      <div class="sheet-box">
-        <h4>Spellcasting</h4>
-        <p>${spellSummary}</p>
-      </div>
-      <div class="sheet-box">
-        <h4>Prepared Spells</h4>
-        <ul>${spellList}</ul>
-      </div>
-    </div>
-  `;
-}
-
-function renderItemSheet() {
-  els.itemSheet.classList.add('active');
-  els.itemSheet.innerHTML = `
-    <div class="sheet-header">
-      <h2>Item Sheet</h2>
-      <span class="badge">${state.charName}</span>
-    </div>
-    <div class="sheet-grid">
-      <div class="sheet-box">
-        <h4>Weapons</h4>
-        <p>${getEnhancedWeaponName()} (${getWeaponStats().weaponSize})</p>
-      </div>
-      <div class="sheet-box">
-        <h4>Armor</h4>
-        <p>${getEnhancedArmorName()}</p>
-      </div>
-      <div class="sheet-box">
-        <h4>Gear</h4>
-        <p>${state.item}</p>
-      </div>
-      <div class="sheet-box">
-        <h4>Magic Items</h4>
-        <ul>${(state.magicInventory || []).map((item) => `<li>${item}</li>`).join('') || '<li>None</li>'}</ul>
+        <div class="sheet-box official-notes-box journal-notes-box"><h4>Character Notes</h4><p>${notes}</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
       </div>
     </div>
   `;
@@ -2364,8 +2297,6 @@ function loadCharacterFromStorage() {
 function renderAllSheets() {
   renderSummary();
   renderPlayerSheet();
-  renderSpellSheet();
-  renderItemSheet();
   renderSketchSheet();
   renderDeedsSheet();
 }
@@ -3002,18 +2933,6 @@ function bindEvents() {
     document.querySelectorAll('.sheet-section').forEach((section) => section.classList.remove('active'));
     els.playerSheet.classList.add('active');
     renderPlayerSheet();
-  });
-
-  els.generateSpellBtn.addEventListener('click', () => {
-    document.querySelectorAll('.sheet-section').forEach((section) => section.classList.remove('active'));
-    els.spellSheet.classList.add('active');
-    renderSpellSheet();
-  });
-
-  els.generateItemBtn.addEventListener('click', () => {
-    document.querySelectorAll('.sheet-section').forEach((section) => section.classList.remove('active'));
-    els.itemSheet.classList.add('active');
-    renderItemSheet();
   });
 
   els.generateSketchBtn.addEventListener('click', () => {
