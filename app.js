@@ -2817,8 +2817,6 @@ function bindEvents() {
     saveCharacterToStorage();
   });
   els.languagesList.addEventListener('change', syncStateFromInputs);
-  els.characterNotesInput.addEventListener('input', syncStateFromInputs);
-  els.campaignNotesInput.addEventListener('input', syncStateFromInputs);
   els.deedsList.addEventListener('input', syncStateFromInputs);
   els.deedsList.addEventListener('change', syncStateFromInputs);
   els.deedsList.addEventListener('click', (event) => {
