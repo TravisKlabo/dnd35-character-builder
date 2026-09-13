@@ -2144,8 +2144,19 @@ function renderPlayerSheet() {
 
       <div class="official-page official-page-break">
         <div class="sheet-header">
-          <h2>${state.charName} - Character Journal</h2>
+          <h2>${state.charName} - Deeds & Notable Events</h2>
           <span class="badge">Page 5</span>
+        </div>
+        <div class="sheet-box deed-record-box">
+          <p>Record adventures, honors, discoveries, allies, enemies, and other events worth remembering.</p>
+          ${state.deeds.length ? state.deeds.map((deed) => `<div class="deed-record"><strong>Level ${deed.level || 1}</strong><span>${deed.text || 'Unrecorded deed'}</span></div>`).join('') : '<p>No deeds recorded yet.</p>'}
+        </div>
+      </div>
+
+      <div class="official-page official-page-break">
+        <div class="sheet-header">
+          <h2>${state.charName} - Character Journal</h2>
+          <span class="badge">Page 6</span>
         </div>
         <div class="journal-grid">
           <div class="sheet-box"><h4>Languages</h4><p>${getAllLanguages().join(', ')}</p></div>
@@ -2296,7 +2307,6 @@ function renderAllSheets() {
   renderSummary();
   renderPlayerSheet();
   renderSketchSheet();
-  renderDeedsSheet();
 }
 
 function exportCharacter() {
