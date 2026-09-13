@@ -220,6 +220,32 @@ function getCarriedWeight() {
   }, { total: 0, unknown: 0 });
 }
 
+function getLoadStatus(carriedWeight = getCarriedWeight()) {
+  const capacity = getCarryCapacity();
+  const small = getRace().size === 'Small';
+  const normalSpeed = small ? 20 : 30;
+  const loadSpeed = small ? 15 : 20;
+  let level = 'Light load';
+  let effects = 'No load penalties. Normal movement and running apply.';
+  let movement = `${normalSpeed} ft.`;
+
+  if (carriedWeight.total > capacity.heavy) {
+    level = 'Over heavy load';
+    effects = `Cannot move normally. A character can drag up to ${capacity.drag} lb.; load above that exceeds the listed carrying limits.`;
+    movement = 'No normal movement';
+  } else if (carriedWeight.total > capacity.medium) {
+    level = 'Heavy load';
+    effects = `Speed becomes ${loadSpeed} ft.; maximum Dexterity bonus +1; additional armor check penalty -6; running is limited to 3 times speed.`;
+    movement = `${loadSpeed} ft.`;
+  } else if (carriedWeight.total > capacity.light) {
+    level = 'Medium load';
+    effects = `Speed becomes ${loadSpeed} ft.; maximum Dexterity bonus +3; additional armor check penalty -3; running is limited to 4 times speed.`;
+    movement = `${loadSpeed} ft.`;
+  }
+
+  return { level, effects, movement, capacity };
+}
+
 function formatEquipmentOption(item) {
   return `${item} - ${getEquipmentPrice(item)} - ${getEquipmentWeight(item)}`;
 }
@@ -1734,6 +1760,7 @@ function renderSummary() {
   const maxRanks = getAvailableSkillPoints();
   const spellSummary = getSpellSlotSummary();
   const carriedWeight = getCarriedWeight();
+  const loadStatus = getLoadStatus(carriedWeight);
   const carriedWeightLabel = `${Number(carriedWeight.total.toFixed(1))} lb.${carriedWeight.unknown ? ` + ${carriedWeight.unknown} item weight${carriedWeight.unknown === 1 ? '' : 's'} varies` : ''}`;
 
   const summaryHtml = `
@@ -1756,12 +1783,14 @@ function renderSummary() {
       <div class="stat-pill"><strong>Skills</strong><br>${totalRanks}/${maxRanks} ranks</div>
       <div class="stat-pill"><strong>Feats</strong><br>${state.selectedFeats.length}/${getFeatSlots()} slots</div>
       <div class="stat-pill"><strong>Carried Weight</strong><br>${carriedWeightLabel}</div>
+      <div class="stat-pill"><strong>Load</strong><br>${loadStatus.level}</div>
       <div class="stat-pill"><strong>Setting</strong><br>${state.setting === 'dragonlance' ? 'Dragonlance' : 'Core 3.5'}</div>
     </div>
     <div class="warnings-box">
       <h4>Rule Checks</h4>
       <ul>${warnings.length ? warnings.map((warning) => `<li>${warning}</li>`).join('') : '<li>No major rule issues detected.</li>'}</ul>
       <p><strong>Spell Slots:</strong> ${spellSummary}</p>
+      <p><strong>Load Effects:</strong> ${loadStatus.effects} Current load movement: ${loadStatus.movement}. Thresholds: light ${loadStatus.capacity.light} lb., medium ${loadStatus.capacity.medium} lb., heavy ${loadStatus.capacity.heavy} lb.${carriedWeight.unknown ? ' Status is based on known item weights.' : ''}</p>
     </div>
   `;
   els.summaryCard.innerHTML = summaryHtml;
