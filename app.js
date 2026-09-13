@@ -383,6 +383,8 @@ const state = {
   magicInventory: [],
   selectedLanguages: [],
   deeds: [],
+  characterNotes: '',
+  campaignNotes: '',
   deity: 'None selected'
   ,weaponSize: 'auto'
   ,setting: 'core'
@@ -428,6 +430,8 @@ const els = {
   abilities: document.querySelector('#abilities'),
   languagesList: document.querySelector('#languagesList'),
   deedsList: document.querySelector('#deedsList'),
+  characterNotesInput: document.querySelector('#characterNotesInput'),
+  campaignNotesInput: document.querySelector('#campaignNotesInput'),
   addDeedBtn: document.querySelector('#addDeedBtn'),
   skillsHeading: document.querySelector('#skillsHeading'),
   skillsList: document.querySelector('#skillsList'),
@@ -1387,7 +1391,6 @@ function renderDeedsSheet() {
         <p>Record adventures, honors, discoveries, allies, enemies, and other events worth remembering.</p>
         ${deeds.length ? deeds.map((deed) => `<div class="deed-record"><strong>Level ${deed.level || 1}</strong><span>${deed.text || 'Unrecorded deed'}</span></div>`).join('') : '<p>No deeds recorded yet.</p>'}
       </div>
-      <div class="sheet-box official-notes-box"><h4>Additional Campaign Notes</h4><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
     </div>
   `;
 }
@@ -2152,7 +2155,8 @@ function renderPlayerSheet() {
           <div class="sheet-box"><h4>Languages</h4><p>${getAllLanguages().join(', ')}</p></div>
           <div class="sheet-box"><h4>Deity / Allegiance</h4><p>${state.deity}</p><p>${state.setting === 'dragonlance' ? 'Krynn path: ' + state.krynnPath : 'Allegiance: ____________________'}</p></div>
         </div>
-        <div class="sheet-box official-notes-box journal-notes-box"><h4>Character Notes</h4><p>${notes}</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
+        <div class="sheet-box official-notes-box journal-notes-box"><h4>Character Notes</h4><p>${state.characterNotes || 'No character notes recorded.'}</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
+        <div class="sheet-box official-notes-box journal-notes-box"><h4>Additional Campaign Notes</h4><p>${state.campaignNotes || 'No additional campaign notes recorded.'}</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
       </div>
     </div>
   `;
@@ -2388,6 +2392,8 @@ function applyCharacterData(data) {
   state.selectedSpells = Array.isArray(data.selectedSpells) ? data.selectedSpells : [];
   state.selectedLanguages = Array.isArray(data.selectedLanguages) ? [...new Set(data.selectedLanguages)] : [];
   state.deeds = Array.isArray(data.deeds) ? data.deeds.map((deed) => ({ level: Number(deed.level) || 1, text: String(deed.text || '') })) : [];
+  state.characterNotes = String(data.characterNotes || '');
+  state.campaignNotes = String(data.campaignNotes || '');
   state.skillRanks = data.skillRanks || {};
 
   if ((data.levelUpMode || data.levelUpPending) && state.lastLevelSnapshot) {
@@ -2415,6 +2421,8 @@ function applyCharacterData(data) {
   els.settingSelect.value = state.setting;
   populateDeitySelect();
   els.deitySelect.value = state.deity;
+  els.characterNotesInput.value = state.characterNotes;
+  els.campaignNotesInput.value = state.campaignNotes;
   els.krynnPathSelect.value = state.krynnPath;
   els.moonSelect.value = state.moon;
   els.prestigeClassSelect.value = state.prestigeClass;
@@ -2570,6 +2578,8 @@ function syncStateFromInputs() {
     text: input.value.trim(),
     level: Number(document.querySelector(`[data-deed-level="${input.dataset.deedText}"]`)?.value || 1)
   })).filter((deed) => deed.text);
+  state.characterNotes = els.characterNotesInput.value;
+  state.campaignNotes = els.campaignNotesInput.value;
   updateEquipmentRuleTriggers();
   renderEquipmentInventory();
 
@@ -2790,6 +2800,8 @@ function bindEvents() {
     saveCharacterToStorage();
   });
   els.languagesList.addEventListener('change', syncStateFromInputs);
+  els.characterNotesInput.addEventListener('input', syncStateFromInputs);
+  els.campaignNotesInput.addEventListener('input', syncStateFromInputs);
   els.deedsList.addEventListener('input', syncStateFromInputs);
   els.deedsList.addEventListener('change', syncStateFromInputs);
   els.deedsList.addEventListener('click', (event) => {
