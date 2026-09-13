@@ -2116,7 +2116,7 @@ function renderPlayerSheet() {
           <h2>${state.charName} - Skills & Abilities</h2>
           <span class="badge">Page 3</span>
         </div>
-        <div class="sheet-grid official-wide-grid">
+        <div class="sheet-grid official-wide-grid skills-abilities-grid">
           <div class="sheet-box">
             <h4>Skills</h4>
             <table class="official-table skill-table"><thead><tr><th>Skill</th><th>Key</th><th>Ranks</th><th>Total</th></tr></thead><tbody>

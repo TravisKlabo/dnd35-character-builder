@@ -702,6 +702,10 @@ input, select {
   grid-template-columns: minmax(0, 1.5fr) minmax(220px, 1fr);
 }
 
+.skills-abilities-grid {
+  grid-template-columns: minmax(0, 1fr) fit-content(280px);
+}
+
 .official-table {
   width: 100%;
   border-collapse: collapse;
@@ -922,6 +926,10 @@ input, select {
   .sheet-grid {
     grid-template-columns: repeat(2, minmax(220px, 1fr));
     gap: 10px;
+  }
+
+  .skills-abilities-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(210px, 280px);
   }
 
   .sheet-box {
