@@ -882,7 +882,7 @@ function deriver() {
   const fort = getLevelSave('fort');
   const ref = getLevelSave('ref');
   const will = getLevelSave('will');
-  const ac = 10 + mods.dex + getArmorBonus();
+  const ac = getArmorClassDetails().ac;
 
   return { race, selectedClass, mods, hp, bab, initiative, fort, ref, will, ac };
 }
@@ -906,15 +906,65 @@ function adjustWeaponDamageDie(die, sizeDelta) {
 }
 
 function getArmorBonus() {
-  const armorBonuses = {
-    'Padded Armor': 1, 'Leather Armor': 2, 'Studded Leather': 3, 'Hide Armor': 3,
-    'Chain Shirt': 4, 'Scale Mail': 4, Chainmail: 5, Breastplate: 5,
-    'Splint Mail': 6, 'Half-Plate': 7, 'Full Plate': 8,
-    Buckler: 1, 'Light Wooden Shield': 1, 'Heavy Wooden Shield': 2,
-    'Light Steel Shield': 1, 'Heavy Steel Shield': 2, 'Tower Shield': 4,
-    'Mithral Chain Shirt': 4, 'Mithral Breastplate': 5, 'Mithral Full Plate': 8
+  return getArmorProfile(state.armor).armorBonus + Number(state.armorEnhancement || 0);
+}
+
+function getArmorProfile(armor) {
+  const profiles = {
+    'No Armor': { category: 'none', armorBonus: 0, maxDex: Infinity, checkPenalty: 0, spellFailure: 0 },
+    'Padded Armor': { category: 'light', armorBonus: 1, maxDex: 8, checkPenalty: -0, spellFailure: 5 },
+    'Leather Armor': { category: 'light', armorBonus: 2, maxDex: 6, checkPenalty: -0, spellFailure: 10 },
+    'Studded Leather': { category: 'light', armorBonus: 3, maxDex: 5, checkPenalty: -1, spellFailure: 15 },
+    'Chain Shirt': { category: 'light', armorBonus: 4, maxDex: 4, checkPenalty: -2, spellFailure: 20 },
+    'Hide Armor': { category: 'medium', armorBonus: 3, maxDex: 4, checkPenalty: -3, spellFailure: 20 },
+    'Scale Mail': { category: 'medium', armorBonus: 4, maxDex: 3, checkPenalty: -4, spellFailure: 25 },
+    Chainmail: { category: 'medium', armorBonus: 5, maxDex: 2, checkPenalty: -5, spellFailure: 30 },
+    Breastplate: { category: 'medium', armorBonus: 5, maxDex: 3, checkPenalty: -4, spellFailure: 25 },
+    'Splint Mail': { category: 'heavy', armorBonus: 6, maxDex: 0, checkPenalty: -7, spellFailure: 40 },
+    'Half-Plate': { category: 'heavy', armorBonus: 7, maxDex: 0, checkPenalty: -7, spellFailure: 40 },
+    'Full Plate': { category: 'heavy', armorBonus: 8, maxDex: 1, checkPenalty: -6, spellFailure: 35 },
+    Buckler: { category: 'shield', armorBonus: 1, maxDex: Infinity, checkPenalty: -1, spellFailure: 5 },
+    'Light Wooden Shield': { category: 'shield', armorBonus: 1, maxDex: Infinity, checkPenalty: -1, spellFailure: 5 },
+    'Heavy Wooden Shield': { category: 'shield', armorBonus: 2, maxDex: Infinity, checkPenalty: -2, spellFailure: 15 },
+    'Light Steel Shield': { category: 'shield', armorBonus: 1, maxDex: Infinity, checkPenalty: -1, spellFailure: 5 },
+    'Heavy Steel Shield': { category: 'shield', armorBonus: 2, maxDex: Infinity, checkPenalty: -2, spellFailure: 15 },
+    'Tower Shield': { category: 'shield', armorBonus: 4, maxDex: Infinity, checkPenalty: -10, spellFailure: 50 },
+    'Mithral Chain Shirt': { category: 'light', armorBonus: 4, maxDex: 6, checkPenalty: 0, spellFailure: 10 },
+    'Mithral Breastplate': { category: 'light', armorBonus: 5, maxDex: 5, checkPenalty: -1, spellFailure: 15 },
+    'Mithral Full Plate': { category: 'medium', armorBonus: 8, maxDex: 3, checkPenalty: -3, spellFailure: 25 }
   };
-  return (armorBonuses[state.armor] || 0) + Number(state.armorEnhancement || 0);
+  return profiles[armor] || profiles['No Armor'];
+}
+
+function getArmorClassDetails() {
+  const armor = getArmorProfile(state.armor);
+  const shield = armor.category === 'shield' ? armor : getArmorProfile('No Armor');
+  const dexterity = getAbilityModifiers().dex;
+  const load = getLoadStatus();
+  const loadMaxDex = load.level === 'Medium load' ? 3 : load.level === 'Heavy load' || load.level === 'Over heavy load' ? 1 : Infinity;
+  const maxDex = Math.min(armor.maxDex, loadMaxDex);
+  const cappedDexterity = Math.min(dexterity, maxDex);
+  const classIds = getClassLevelEntries().map((entry) => entry.classId);
+  const arcaneCaster = classIds.some((classId) => ['bard', 'sorcerer', 'wizard'].includes(classId));
+  const unarmoredMonk = classIds.includes('monk') && state.armor === 'No Armor';
+  const dodgeBonus = state.selectedFeats.includes('Dodge') ? 1 : 0;
+  const monkBonus = unarmoredMonk ? getAbilityModifiers().wis : 0;
+  const nonproficient = !isArmorProficient(state.armor);
+  const bardLightArmorException = classIds.includes('bard') && armor.category === 'light';
+  const spellFailure = arcaneCaster && !bardLightArmorException && armor.category !== 'none'
+    ? armor.spellFailure + shield.spellFailure
+    : 0;
+  const armorBonus = getArmorBonus();
+  const shieldBonus = state.armor === 'No Armor' || armor.category !== 'shield' ? 0 : armorBonus;
+  const totalArmorBonus = state.armor === 'No Armor' || armor.category === 'shield' ? shieldBonus : armorBonus;
+  const ac = 10 + cappedDexterity + totalArmorBonus + dodgeBonus + monkBonus;
+  const effects = [];
+  if (nonproficient) effects.push('not proficient: armor check penalties apply to attacks and Strength/Dexterity-based checks');
+  if (load.level !== 'Light load') effects.push(`load reduces movement and caps Dexterity at +${loadMaxDex}`);
+  if (spellFailure) effects.push(`${spellFailure}% arcane spell failure`);
+  if (armor.category === 'shield') effects.push('shield equipped as armor choice; armor body slot is unarmored');
+  if (monkBonus) effects.push(`Monk AC bonus +${monkBonus} from Wisdom`);
+  return { ac, category: armor.category, armorBonus: totalArmorBonus, dexterity, cappedDexterity, maxDex, checkPenalty: armor.checkPenalty + (load.level === 'Medium load' ? -3 : load.level === 'Heavy load' || load.level === 'Over heavy load' ? -6 : 0), spellFailure, dodgeBonus, monkBonus, effects, proficient: !nonproficient };
 }
 
 function getEnhancedWeaponName() {
@@ -1127,11 +1177,7 @@ function isWeaponProficient(weapon) {
 }
 
 function getArmorCategory(armor) {
-  if (armor.includes('Shield')) return 'shield';
-  if (['Padded Armor', 'Leather Armor', 'Studded Leather', 'Chain Shirt', 'Mithral Chain Shirt'].includes(armor)) return 'light';
-  if (['Hide Armor', 'Scale Mail', 'Chainmail', 'Breastplate', 'Mithral Breastplate'].includes(armor)) return 'medium';
-  if (['Splint Mail', 'Half-Plate', 'Full Plate', 'Mithral Full Plate'].includes(armor)) return 'heavy';
-  return 'none';
+  return getArmorProfile(armor).category;
 }
 
 function isArmorProficient(armor) {
@@ -1157,7 +1203,7 @@ function getSpeed() {
   const race = getRace();
   const selectedClass = getClass();
   const baseSpeed = race.size === 'Small' ? 20 : 30;
-  const armorLimitsSpeed = ['Scale Mail', 'Chainmail', 'Splint Mail', 'Half-Plate', 'Full Plate'].includes(state.armor);
+  const armorLimitsSpeed = ['medium', 'heavy'].includes(getArmorProfile(state.armor).category);
   let speed = armorLimitsSpeed ? (race.size === 'Small' ? 15 : 20) : baseSpeed;
 
   if (selectedClass.id === 'barbarian' && !armorLimitsSpeed) {
@@ -1793,6 +1839,7 @@ function renderSpells() {
 
 function renderSummary() {
   const { race, selectedClass, hp, bab, initiative, fort, ref, will, ac } = deriver();
+  const armorDetails = getArmorClassDetails();
   const warnings = getRuleWarnings();
   const totalRanks = getSpentSkillPoints();
   const maxRanks = getAvailableSkillPoints();
@@ -1812,6 +1859,7 @@ function renderSummary() {
       <div class="stat-pill"><strong>BAB</strong><br>+${bab}</div>
       <div class="stat-pill"><strong>Init</strong><br>${initiative >= 0 ? '+' : ''}${initiative}</div>
       <div class="stat-pill"><strong>AC</strong><br>${ac}</div>
+      <div class="stat-pill"><strong>Armor</strong><br>${armorDetails.category} / +${armorDetails.armorBonus}<small>Max Dex ${armorDetails.maxDex === Infinity ? 'none' : `+${armorDetails.maxDex}`}</small></div>
       <div class="stat-pill"><strong>Fort</strong><br>${fort >= 0 ? '+' : ''}${fort}</div>
       <div class="stat-pill"><strong>Ref</strong><br>${ref >= 0 ? '+' : ''}${ref}</div>
       <div class="stat-pill"><strong>Will</strong><br>${will >= 0 ? '+' : ''}${will}</div>
@@ -1829,6 +1877,7 @@ function renderSummary() {
       <ul>${warnings.length ? warnings.map((warning) => `<li>${warning}</li>`).join('') : '<li>No major rule issues detected.</li>'}</ul>
       <p><strong>Spell Slots:</strong> ${spellSummary}</p>
       <p><strong>Load Effects:</strong> ${loadStatus.effects} Current load movement: ${loadStatus.movement}. Thresholds: light ${loadStatus.capacity.light} lb., medium ${loadStatus.capacity.medium} lb., heavy ${loadStatus.capacity.heavy} lb.${carriedWeight.unknown ? ' Status is based on known item weights.' : ''}</p>
+      <p><strong>Armor Effects:</strong> ${armorDetails.effects.join('; ') || 'None'} Active check penalty ${armorDetails.checkPenalty}; active arcane spell failure ${armorDetails.spellFailure}%.</p>
     </div>
   `;
   els.summaryCard.innerHTML = summaryHtml;
@@ -1836,6 +1885,7 @@ function renderSummary() {
 
 function renderPlayerSheet() {
   const { race, selectedClass, mods, hp, bab, initiative, fort, ref, will, ac } = deriver();
+  const armorDetails = getArmorClassDetails();
   const hpProgression = getHitPointProgression().rolls.map((entry, index) => `L${index + 1}: d${entry.maximum} roll ${entry.roll}`).join(' | ');
   const statsList = abilityNames.map((ability) => `${ability.toUpperCase()}: ${state.abilities[ability]} (${mods[ability] >= 0 ? '+' : ''}${mods[ability]})`).join(' | ');
   const selectedFeatText = state.selectedFeats.length ? state.selectedFeats.join(', ') : 'None';
@@ -1876,7 +1926,7 @@ function renderPlayerSheet() {
           <h4>Armor Class</h4>
           <p><strong>AC</strong> ${ac}</p>
           <p><strong>Touch</strong> ${10 + mods.dex}</p>
-          <p><strong>Flat-Footed</strong> ${ac - Math.max(0, mods.dex)}</p>
+          <p><strong>Flat-Footed</strong> ${ac - Math.max(0, armorDetails.cappedDexterity)}</p>
         </div>
         <div class="sheet-box compact-box">
           <h4>Attack</h4>
@@ -1976,10 +2026,22 @@ function renderPlayerSheet() {
             <h4>Armor & Defense</h4>
             <p><strong>Active Armor:</strong> ${getEnhancedArmorName()}</p>
             <p>${state.armorAbility === 'none' ? (armorRuleSummaries[state.armor] || 'Standard armor or shield; select it to calculate current AC and movement.') : getArmorAbilityDescription(state.armorAbility)}</p>
-            <ul>${possessedArmor.map((item) => `<li>${item}${item === state.armor ? ' (active)' : ''}</li>`).join('')}</ul>
+            <table class="official-table armor-table">
+              <thead><tr><th>Active</th><th>Name</th><th>Type</th><th>AC Bonus</th><th>Max Dex</th><th>Check Penalty</th><th>Arcane Failure</th><th>Proficiency</th></tr></thead>
+              <tbody>${possessedArmor.map((item) => {
+                const profile = getArmorProfile(item);
+                const active = item === state.armor;
+                const details = active ? getArmorClassDetails() : null;
+                const maxDex = profile.maxDex === Infinity ? 'No cap' : `+${profile.maxDex}`;
+                const checkPenalty = active ? details.checkPenalty : profile.checkPenalty;
+                const spellFailure = active && getClassLevelEntries().some((entry) => ['bard', 'sorcerer', 'wizard'].includes(entry.classId)) && !(getClassLevelEntries().some((entry) => entry.classId === 'bard') && profile.category === 'light') ? profile.spellFailure : 0;
+                return `<tr><td><input type="checkbox" class="active-armor-checkbox" data-active-armor="${item}" ${active ? 'checked' : ''} /></td><td>${item}${active ? ' (active)' : ''}</td><td>${profile.category}</td><td>+${profile.armorBonus + (active ? Number(state.armorEnhancement || 0) : 0)}</td><td>${maxDex}</td><td>${checkPenalty}</td><td>${spellFailure}%</td><td>${isArmorProficient(item) ? 'Proficient' : 'Not proficient'}</td></tr>`;
+              }).join('')}</tbody>
+            </table>
             <p>Armor Class: ${ac}</p>
             <p>Touch AC: ${10 + mods.dex}</p>
-            <p>Flat-Footed AC: ${ac - Math.max(0, mods.dex)}</p>
+            <p>Flat-Footed AC: ${ac - Math.max(0, armorDetails.cappedDexterity)}</p>
+            <p><strong>Applied effects:</strong> ${getArmorClassDetails().effects.join('; ') || 'None'}</p>
             <p>Damage Reduction: ______</p>
             <p>Spell Resistance: ______</p>
           </div>
@@ -2822,14 +2884,26 @@ function bindEvents() {
 
   els.playerSheet.addEventListener('change', (event) => {
     const weapon = event.target.dataset.activeWeapon;
-    if (!weapon) return;
-    if (!toggleEquippedWeapon(weapon)) return;
-    els.weaponSelect.value = state.weapon;
-    state.weaponInventory = [...new Set([...(state.weaponInventory || []), weapon])];
-    updateEquipmentRuleTriggers();
-    renderEquipmentInventory();
-    renderAllSheets();
-    saveCharacterToStorage();
+    const armor = event.target.dataset.activeArmor;
+    if (weapon) {
+      if (!toggleEquippedWeapon(weapon)) return;
+      els.weaponSelect.value = state.weapon;
+      state.weaponInventory = [...new Set([...(state.weaponInventory || []), weapon])];
+      updateEquipmentRuleTriggers();
+      renderEquipmentInventory();
+      renderAllSheets();
+      saveCharacterToStorage();
+      return;
+    }
+    if (armor) {
+      state.armor = state.armor === armor ? 'No Armor' : armor;
+      els.armorSelect.value = state.armor;
+      state.armorInventory = [...new Set([...(state.armorInventory || []), armor])];
+      updateEquipmentRuleTriggers();
+      renderEquipmentInventory();
+      renderAllSheets();
+      saveCharacterToStorage();
+    }
   });
 
   els.saveBtn.addEventListener('click', () => {
