@@ -1409,7 +1409,7 @@ function renderSpellSheet() {
       <div class="sheet-box">
         <h4>Selected Spells</h4>
         <table class="official-table"><thead><tr><th>Spell</th><th>Level</th><th>Prepared / Known</th><th>Notes</th></tr></thead><tbody>
-          ${selectedSpells.map((spell) => `<tr><td>${spell.name}</td><td>${spell.level}</td><td>________________</td><td>________________</td></tr>`).join('') || '<tr><td colspan="4">No spells selected</td></tr>'}
+          ${selectedSpells.map((spell) => `<tr><td>${spell.name}</td><td>${spell.level}</td><td>________________</td><td>________________</td></tr>`).join('')}${Array.from({ length: 4 }, () => '<tr class="blank-spell-row"><td>________________</td><td>_____</td><td>________________</td><td>________________</td></tr>').join('')}
         </tbody></table>
       </div>
       <div class="sheet-box official-notes-box"><h4>Spell Notes</h4><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
