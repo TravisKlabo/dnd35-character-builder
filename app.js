@@ -146,7 +146,7 @@ const armorCatalog = [
   'Tower Shield', 'Mithral Chain Shirt', 'Mithral Breastplate', 'Mithral Full Plate'
 ];
 const itemCatalog = [
-  'Backpack', 'Bedroll', 'Flint and Steel', 'Rations (5 days)', 'Waterskin', 'Rope (50 ft.)',
+  'No Item', 'Backpack', 'Bedroll', 'Flint and Steel', 'Rations (5 days)', 'Waterskin', 'Rope (50 ft.)',
   'Grappling Hook', 'Crowbar', 'Lantern', 'Oil (1 pint)', 'Torches (5)', 'Tent',
   'Healing Potion', 'Antitoxin', 'Healer\'s Kit', 'Thieves\' Tools', 'Holy Symbol',
   'Spell Component Pouch', 'Musical Instrument', 'Amulet of Natural Armor +1', 'Traveler\'s Cloak',
@@ -172,7 +172,7 @@ const magicItemCatalog = [
   'Dust of Disappearance', 'Rope of Climbing', 'Decanter of Endless Water', 'Dragonlance Relic', 'Krynn Moonstone'
 ];
 const equipmentPrices = {
-  'No Weapon': '0 gp', Longsword: '15 gp', Shortsword: '10 gp', Greatsword: '50 gp', Rapier: '20 gp', Scimitar: '15 gp', Dagger: '2 gp', Quarterstaff: '0 gp',
+  'No Weapon': '0 gp', 'No Item': '0 gp', Longsword: '15 gp', Shortsword: '10 gp', Greatsword: '50 gp', Rapier: '20 gp', Scimitar: '15 gp', Dagger: '2 gp', Quarterstaff: '0 gp',
   Battleaxe: '10 gp', Greataxe: '20 gp', Warhammer: '12 gp', Mace: '5 gp', Spear: '2 gp', Shortbow: '30 gp', Longbow: '75 gp', 'Light Crossbow': '35 gp', 'Heavy Crossbow': '50 gp', Sling: '0 gp', Handaxe: '6 gp', Javelin: '1 gp', Trident: '15 gp', Net: '20 gp', Whip: '1 gp', Kukri: '8 gp', Kama: '2 gp', Sickle: '6 gp', Glaive: '8 gp', Halberd: '10 gp', Guisarme: '9 gp', 'Spiked Chain': '25 gp', Falchion: '75 gp', Lance: '10 gp', Morningstar: '8 gp', 'Light Mace': '5 gp', 'Light Hammer': '1 gp', Shuriken: '2 gp', 'Repeating Crossbow': '250 gp', 'Hand Crossbow': '100 gp', Sap: '1 gp', Nunchaku: '2 gp', Sai: '1 gp', Siangham: '2 gp', Dart: '5 cp',
   'No Armor': '0 gp', 'Padded Armor': '5 gp', 'Leather Armor': '10 gp', 'Studded Leather': '25 gp', 'Hide Armor': '15 gp', 'Chain Shirt': '100 gp', 'Scale Mail': '50 gp', Chainmail: '150 gp', Breastplate: '200 gp', 'Splint Mail': '200 gp', 'Half-Plate': '600 gp', 'Full Plate': '1,500 gp', Buckler: '15 gp', 'Light Wooden Shield': '3 gp', 'Heavy Wooden Shield': '7 gp', 'Light Steel Shield': '9 gp', 'Heavy Steel Shield': '20 gp', 'Tower Shield': '30 gp', 'Mithral Chain Shirt': '1,100 gp', 'Mithral Breastplate': '4,200 gp', 'Mithral Full Plate': '10,500 gp',
   Backpack: '2 gp', Bedroll: '1 sp', 'Flint and Steel': '1 gp', 'Rations (5 days)': '2.5 gp', Waterskin: '1 gp', 'Rope (50 ft.)': '1 gp', 'Grappling Hook': '1 gp', Crowbar: '2 gp', Lantern: '7 gp', 'Oil (1 pint)': '1 sp', 'Torches (5)': '5 cp', Tent: '10 gp', 'Healing Potion': '50 gp', Antitoxin: '50 gp', "Healer's Kit": '50 gp', "Thieves' Tools": '30 gp', 'Holy Symbol': '1 gp', 'Spell Component Pouch': '5 gp', 'Musical Instrument': '5 gp', 'Amulet of Natural Armor +1': '2,000 gp', "Traveler's Cloak": '5 gp',
@@ -180,7 +180,7 @@ const equipmentPrices = {
   'Potion of Cure Light Wounds': '50 gp', 'Potion of Shield of Faith +2': '300 gp', 'Scroll of Identify': '25 gp', 'Scroll of Protection from Evil': '25 gp', 'Wand of Cure Light Wounds': '750 gp', 'Wand of Magic Missile': '750 gp', 'Cloak of Resistance +1': '1,000 gp', 'Ring of Protection +1': '2,000 gp', 'Amulet of Natural Armor +1': '2,000 gp', 'Belt of Giant Strength +2': '4,000 gp', 'Gloves of Dexterity +2': '4,000 gp', 'Headband of Intellect +2': '4,000 gp', 'Boots of Elvenkind': '2,500 gp', 'Goggles of Night': '8,000 gp', 'Bag of Holding': '2,500 gp', 'Handy Haversack': '2,000 gp', 'Pearl of Power (1st)': '1,000 gp', 'Dust of Disappearance': '3,500 gp', 'Rope of Climbing': '3,000 gp', 'Decanter of Endless Water': '9,000 gp', 'Dragonlance Relic': 'varies', 'Krynn Moonstone': 'varies'
 };
 const equipmentWeights = {
-  'No Weapon': '0 lb.', Longsword: '4 lb.', Shortsword: '2 lb.', Greatsword: '8 lb.', Rapier: '2 lb.', Scimitar: '4 lb.', Dagger: '1 lb.', Quarterstaff: '4 lb.', Battleaxe: '6 lb.', Greataxe: '12 lb.', Warhammer: '5 lb.', Mace: '8 lb.', Spear: '6 lb.', Shortbow: '2 lb.', Longbow: '3 lb.', 'Light Crossbow': '4 lb.', 'Heavy Crossbow': '8 lb.', Sling: '0 lb.', Handaxe: '3 lb.', Javelin: '2 lb.', Trident: '4 lb.', Net: '6 lb.', Whip: '2 lb.', Kukri: '2 lb.', Kama: '2 lb.', Sickle: '2 lb.', Glaive: '10 lb.', Halberd: '12 lb.', Guisarme: '12 lb.', 'Spiked Chain': '10 lb.', Falchion: '8 lb.', Lance: '10 lb.', Morningstar: '6 lb.', 'Light Mace': '4 lb.', 'Light Hammer': '2 lb.', Shuriken: '1/2 lb.', 'Repeating Crossbow': '6 lb.', 'Hand Crossbow': '2 lb.', Sap: '2 lb.', Nunchaku: '2 lb.', Sai: '1 lb.', Siangham: '2 lb.', Dart: '1/2 lb.',
+  'No Weapon': '0 lb.', 'No Item': '0 lb.', Longsword: '4 lb.', Shortsword: '2 lb.', Greatsword: '8 lb.', Rapier: '2 lb.', Scimitar: '4 lb.', Dagger: '1 lb.', Quarterstaff: '4 lb.', Battleaxe: '6 lb.', Greataxe: '12 lb.', Warhammer: '5 lb.', Mace: '8 lb.', Spear: '6 lb.', Shortbow: '2 lb.', Longbow: '3 lb.', 'Light Crossbow': '4 lb.', 'Heavy Crossbow': '8 lb.', Sling: '0 lb.', Handaxe: '3 lb.', Javelin: '2 lb.', Trident: '4 lb.', Net: '6 lb.', Whip: '2 lb.', Kukri: '2 lb.', Kama: '2 lb.', Sickle: '2 lb.', Glaive: '10 lb.', Halberd: '12 lb.', Guisarme: '12 lb.', 'Spiked Chain': '10 lb.', Falchion: '8 lb.', Lance: '10 lb.', Morningstar: '6 lb.', 'Light Mace': '4 lb.', 'Light Hammer': '2 lb.', Shuriken: '1/2 lb.', 'Repeating Crossbow': '6 lb.', 'Hand Crossbow': '2 lb.', Sap: '2 lb.', Nunchaku: '2 lb.', Sai: '1 lb.', Siangham: '2 lb.', Dart: '1/2 lb.',
   'No Armor': '0 lb.', 'Padded Armor': '10 lb.', 'Leather Armor': '15 lb.', 'Studded Leather': '20 lb.', 'Hide Armor': '25 lb.', 'Chain Shirt': '25 lb.', 'Scale Mail': '30 lb.', Chainmail: '40 lb.', Breastplate: '30 lb.', 'Splint Mail': '45 lb.', 'Half-Plate': '50 lb.', 'Full Plate': '50 lb.', Buckler: '5 lb.', 'Light Wooden Shield': '5 lb.', 'Heavy Wooden Shield': '10 lb.', 'Light Steel Shield': '6 lb.', 'Heavy Steel Shield': '15 lb.', 'Tower Shield': '45 lb.', 'Mithral Chain Shirt': '25 lb.', 'Mithral Breastplate': '30 lb.', 'Mithral Full Plate': '50 lb.',
   Backpack: '2 lb.', Bedroll: '5 lb.', 'Flint and Steel': '0 lb.', 'Rations (5 days)': '5 lb.', Waterskin: '4 lb.', 'Rope (50 ft.)': '10 lb.', 'Grappling Hook': '4 lb.', Crowbar: '5 lb.', Lantern: '2 lb.', 'Oil (1 pint)': '1 lb.', 'Torches (5)': '5 lb.', Tent: '20 lb.', 'Healing Potion': '0 lb.', Antitoxin: '0 lb.', "Healer's Kit": '1 lb.', "Thieves' Tools": '1 lb.', 'Holy Symbol': '1 lb.', 'Spell Component Pouch': '2 lb.', 'Musical Instrument': '3 lb.', 'Amulet of Natural Armor +1': '0 lb.', "Traveler's Cloak": '2 lb.',
   '[Arms and Equipment Guide] Alchemical Silver': 'varies', '[Arms and Equipment Guide] Adamantine Weapon': 'varies', '[Arms and Equipment Guide] Cold Iron Weapon': 'varies', '[Arms and Equipment Guide] Sunrod': '1 lb.', '[Complete Adventurer] Tanglefoot Bag': '4 lb.', '[Complete Adventurer] Thunderstone': '1 lb.', '[Complete Adventurer] Smokestick': '1/2 lb.', '[Complete Adventurer] Silk Rope': '5 lb.', '[Complete Warrior] Masterwork Tool': '1 lb.', '[Complete Warrior] Manacles': '2 lb.', '[Magic Item Compendium] Bag of Holding': '15 lb.', '[Magic Item Compendium] Handy Haversack': '5 lb.', '[Magic Item Compendium] Cloak of Resistance +1': '1 lb.', '[Magic Item Compendium] Boots of Elvenkind': '1 lb.', '[Magic Item Compendium] Gloves of Dexterity +2': '0 lb.', '[Magic Item Compendium] Belt of Giant Strength +2': '1 lb.', '[Dungeon Master Guide] Wand of Cure Light Wounds': '0 lb.', '[Dungeon Master Guide] Scroll of Identify': '0 lb.', '[Dungeon Master Guide] Ring of Protection +1': '0 lb.', '[Dungeon Master Guide] Headband of Intellect +2': '1 lb.', '[Stormwrack] Watercraft, Rowboat': '100 lb.', '[Stormwrack] Grappling Hook, Aquatic': '4 lb.', '[Sandstorm] Desert Outfit': '3 lb.', '[Frostburn] Cold-Weather Outfit': '7 lb.', '[Lords of Madness] Goggles of Night': '0 lb.', '[Dragonlance] Dragonlance': '10 lb.', '[Dragonlance] Steel Coin Purse': '1 lb.', '[Dragonlance] Gnomish Device': 'varies', '[Dragonlance] Kender Hoopak': '2 lb.', '[Dragonlance] Draconian Eggshell Armor': '25 lb.',
@@ -1242,6 +1242,7 @@ function renderEquipmentInventory() {
     <div class="inventory-group"><strong>Weapons carried</strong>${weapons.length ? weapons.map((weapon, index) => `<div class="inventory-row"><span><strong>${weapon}${weapon === state.weapon ? ' • active' : ''}</strong><small>${weaponDescription(weapon)}</small></span><button type="button" class="remove-inventory-btn" data-remove-weapon="${index}">Remove</button></div>`).join('') : '<small>None</small>'}</div>
     <div class="inventory-group"><strong>Armor carried</strong>${armor.length ? armor.map((item, index) => `<div class="inventory-row"><span><strong>${item}${item === state.armor ? ' • active' : ''}</strong><small>${armorDescription(item)}</small></span><button type="button" class="remove-inventory-btn" data-remove-armor="${index}">Remove</button></div>`).join('') : '<small>None</small>'}</div>
     <div class="inventory-group"><strong>Magic items carried</strong>${magic.length ? magic.map((item, index) => `<div class="inventory-row"><span><strong>${item}</strong><small>${getMagicItemDescription(item)}</small></span><button type="button" class="remove-inventory-btn" data-remove-magic="${index}">Remove</button></div>`).join('') : '<small>None</small>'}</div>
+    <div class="inventory-group"><strong>Other item carried</strong>${state.item !== 'No Item' ? `<div class="inventory-row"><span><strong>${state.item}</strong><small>${getEquipmentPrice(state.item)} - ${getEquipmentWeight(state.item)}</small></span><button type="button" class="remove-inventory-btn" data-remove-item="true">Remove</button></div>` : '<small>None</small>'}</div>
   `;
 }
 
@@ -2639,6 +2640,7 @@ function bindEvents() {
     const weaponIndex = event.target.dataset.removeWeapon;
     const armorIndex = event.target.dataset.removeArmor;
     const magicIndex = event.target.dataset.removeMagic;
+    const removeItem = event.target.dataset.removeItem;
     if (weaponIndex !== undefined) {
       const removedWeapon = state.weaponInventory.splice(Number(weaponIndex), 1)[0];
       if (removedWeapon === state.weapon) {
@@ -2656,6 +2658,10 @@ function bindEvents() {
       }
     }
     if (magicIndex !== undefined) state.magicInventory.splice(Number(magicIndex), 1);
+    if (removeItem !== undefined) {
+      state.item = 'No Item';
+      els.itemSelect.value = state.item;
+    }
     renderEquipmentInventory();
     renderAllSheets();
     saveCharacterToStorage();
