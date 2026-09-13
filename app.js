@@ -2334,6 +2334,7 @@ function syncStateFromInputs() {
     state.selectedSkills = [];
     state.selectedFeats = [];
     state.selectedSpells = [];
+    state.selectedLanguages = [];
     state.skillRanks = {};
   }
   state.charName = els.charName.value || 'Unnamed Hero';
@@ -2363,9 +2364,11 @@ function syncStateFromInputs() {
   state.weaponInventory = [...new Set(state.weaponInventory || [])];
   state.armorInventory = [...new Set(state.armorInventory || [])];
   state.weaponSize = els.weaponSizeSelect.value;
-  state.selectedLanguages = [...document.querySelectorAll('[data-language-slot]')]
-    .map((input) => input.value)
-    .filter(Boolean);
+  if (!classChangedDuringCreation) {
+    state.selectedLanguages = [...document.querySelectorAll('[data-language-slot]')]
+      .map((input) => input.value)
+      .filter(Boolean);
+  }
   state.deeds = [...document.querySelectorAll('[data-deed-text]')].map((input) => ({
     text: input.value.trim(),
     level: Number(document.querySelector(`[data-deed-level="${input.dataset.deedText}"]`)?.value || 1)
