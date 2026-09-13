@@ -2123,13 +2123,13 @@ function renderPlayerSheet() {
               ${skillsCatalog.map((skill) => `<tr><td><strong>${skill}${getClass().skills.includes(skill) ? ' *' : ''}</strong></td><td>${getSkillAbility(skill).toUpperCase()}</td><td>${state.skillRanks[skill] || 0}</td><td>${getSkillTotal(skill) >= 0 ? '+' : ''}${getSkillTotal(skill)}</td></tr>`).join('')}
             </tbody></table>
           </div>
-          <div class="sheet-box description-list-box">
+          <div class="sheet-box description-list-box feats-box">
             <h4>Feats</h4><ul>${state.selectedFeats.length ? state.selectedFeats.map((feat) => `<li><strong>${feat}</strong><small class="sheet-description">${featRuleSummaries[feat] || 'A selectable feat that grants a specialized character benefit.'}</small></li>`).join('') : '<li>None selected</li>'}</ul>
           </div>
-          <div class="sheet-box description-list-box">
+          <div class="sheet-box description-list-box special-abilities-box">
             <h4>Special Abilities</h4><ul>${getClassFeatures().map((feature) => `<li><strong>${feature}</strong><small class="sheet-description">${getFeatureDescription(feature)}</small></li>`).join('')}</ul>
           </div>
-          <div class="sheet-box description-list-box">
+          <div class="sheet-box description-list-box racial-traits-box">
             <h4>Racial Traits</h4><ul>${race.traits.map((trait) => `<li><strong>${trait}</strong><small class="sheet-description">${getTraitDescription(trait)}</small></li>`).join('')}</ul>
           </div>
         </div>

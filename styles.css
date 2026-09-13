@@ -851,6 +851,13 @@ input, select {
   page-break-inside: avoid;
 }
 
+@media (min-width: 800px) {
+  .special-abilities-box,
+  .racial-traits-box {
+    grid-column: 2;
+  }
+}
+
 .badge {
   background: #efe7d3;
   border-radius: 999px;
