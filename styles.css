@@ -948,6 +948,10 @@ input, select {
     grid-template-columns: minmax(0, 1fr) minmax(210px, 280px);
   }
 
+  .combat-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .skills-table-columns .official-table {
     font-size: 0.72rem;
   }
@@ -966,6 +970,17 @@ input, select {
 
   .official-table thead {
     display: table-header-group;
+  }
+
+  .combat-grid .official-table {
+    table-layout: fixed;
+    font-size: 0.66rem;
+  }
+
+  .combat-grid .official-table th,
+  .combat-grid .official-table td {
+    overflow-wrap: anywhere;
+    word-break: normal;
   }
 
   .official-table tr {

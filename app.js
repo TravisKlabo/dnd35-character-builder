@@ -2062,7 +2062,7 @@ function renderPlayerSheet() {
           <h2>${state.charName} - Combat & Equipment</h2>
           <span class="badge">Page 2</span>
         </div>
-        <div class="sheet-grid official-wide-grid">
+        <div class="sheet-grid official-wide-grid combat-grid">
           <div class="sheet-box">
             <h4>Weapons</h4>
             <table class="official-table">
