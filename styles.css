@@ -837,6 +837,14 @@ input, select {
   padding-left: 18px;
 }
 
+.sheet-description {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
 .badge {
   background: #efe7d3;
   border-radius: 999px;

@@ -1672,6 +1672,55 @@ function getRuleDescription(type, name) {
   return `${spellRuleSummaries[name] || `${name} is a level ${spell?.level ?? '?'} spell in this builder's catalog. Consult your licensed 3.5 reference for its exact casting time, range, duration, saving throw, and components.`} Spell level: ${spell?.level ?? '?'}.`;
 }
 
+function getFeatureDescription(feature) {
+  const descriptions = {
+    'Armor and weapon proficiencies': 'Gain the armor, shield, and weapon training granted by the class.',
+    'Bardic music': 'Use Perform-based music to inspire allies or create other magical performances.',
+    'Divine grace': 'Add your Charisma modifier to saving throws.',
+    Evasion: 'Avoid damage on a successful Reflex save and reduce damage on a failed save.',
+    'Fast movement': 'Increase land speed while unencumbered and wearing permitted armor.',
+    'Flurry of blows': 'Make extra unarmed or monk-weapon attacks with adjusted attack penalties.',
+    Rage: 'Temporarily gain combat ability and durability while taking penalties to some actions.',
+    'Sneak attack': 'Deal extra precision damage when attacking a vulnerable or flanked target.',
+    Spells: 'Prepare or cast spells according to the class spell progression and ability.',
+    Spellcasting: 'Prepare or cast arcane spells using the class spell list and spellbook.',
+    'Turn undead': 'Channel divine power to turn or rebuke undead creatures.',
+    'Unarmed strike': 'Fight effectively without a manufactured weapon and threaten adjacent squares.',
+    'Wild shape': 'Assume animal forms while retaining selected character abilities.',
+    'Lay on hands': 'Heal a living creature by spending a pool of healing energy.',
+    'Smite evil': 'Add Charisma to an attack and level to damage against an evil target.',
+    Track: 'Follow creature trails using Survival checks and the environment.',
+    Trapfinding: 'Detect and disable magical traps that normally require specialized training.'
+  };
+  const match = Object.keys(descriptions).find((key) => feature.toLowerCase().includes(key.toLowerCase()));
+  return descriptions[match] || 'A class or prestige-class ability granted by the character progression.';
+}
+
+function getTraitDescription(trait) {
+  const descriptions = {
+    Adaptable: 'Gain an extra trained skill or similar human flexibility benefit.',
+    Skilled: 'Receive additional skill training compared with many other ancestries.',
+    Darkvision: 'See in darkness within the ancestry range, usually in black and white.',
+    Stonecunning: 'Gain special bonuses to notice and understand stonework and underground construction.',
+    Stability: 'Gain improved resistance against effects that would knock you prone.',
+    'Keen Senses': 'Gain enhanced perception through keen hearing, sight, or related senses.',
+    'Immunity to Sleep': 'Remain immune to magical sleep effects.',
+    'Low-Light Vision': 'See farther than a human in dim illumination.',
+    Lucky: 'Use a small luck benefit to improve an unlucky roll or defense.',
+    Brave: 'Gain a bonus against fear effects.',
+    'Good Aim': 'Gain a bonus with selected ranged attacks or careful aim.',
+    Fearless: 'Resist fear and cultural intimidation effects.',
+    'Kender Pockets': 'Use exceptional curiosity and concealed storage as a cultural knack.',
+    Taunt: 'Provoke an enemy through a skillful taunt and social pressure.',
+    'Natural Armor': 'Gain a natural armor bonus that improves Armor Class.',
+    'Powerful Build': 'Count as larger for selected combat and carrying purposes.',
+    'Celestial Resistance': 'Resist selected energy or environmental effects associated with celestial heritage.',
+    'Fiendish Resistance': 'Resist selected energy or environmental effects associated with fiendish heritage.',
+    'Gnome Magic': 'Use minor innate magical abilities associated with gnome heritage.'
+  };
+  return descriptions[trait] || 'A racial or ancestry trait granted by the selected character lineage.';
+}
+
 function rollHitDie(sides) {
   return Math.floor(Math.random() * sides) + 1;
 }
@@ -1889,7 +1938,7 @@ function renderPlayerSheet() {
   const hpProgression = getHitPointProgression().rolls.map((entry, index) => `L${index + 1}: d${entry.maximum} roll ${entry.roll}`).join(' | ');
   const statsList = abilityNames.map((ability) => `${ability.toUpperCase()}: ${state.abilities[ability]} (${mods[ability] >= 0 ? '+' : ''}${mods[ability]})`).join(' | ');
   const selectedFeatText = state.selectedFeats.length ? state.selectedFeats.join(', ') : 'None';
-  const skillListHtml = state.selectedSkills.length ? state.selectedSkills.map((skill) => `<li>${skill}: ${getSkillTotal(skill) >= 0 ? '+' : ''}${getSkillTotal(skill)}</li>`).join('') : '<li>None</li>';
+  const skillListHtml = state.selectedSkills.length ? state.selectedSkills.map((skill) => `<li><strong>${skill}: ${getSkillTotal(skill) >= 0 ? '+' : ''}${getSkillTotal(skill)}</strong><small class="sheet-description">${skillRuleSummaries[skill] || 'A trained skill used for its listed adventuring specialty.'}</small></li>`).join('') : '<li>None</li>';
   const spellcastingInfo = selectedClass.spellcaster ? `<p><strong>Spellcasting:</strong> ${getSpellSlotSummary()}</p>` : '<p><strong>Spellcasting:</strong> None</p>';
   const speed = getSpeed();
   const weaponStats = getWeaponStats();
@@ -1970,7 +2019,7 @@ function renderPlayerSheet() {
         </div>
         <div class="sheet-box">
           <h4>Feats</h4>
-          <p>${selectedFeatText}</p>
+          <ul>${state.selectedFeats.length ? state.selectedFeats.map((feat) => `<li><strong>${feat}</strong><small class="sheet-description">${featRuleSummaries[feat] || 'A selectable feat that grants a specialized character benefit.'}</small></li>`).join('') : '<li>None selected</li>'}</ul>
         </div>
         <div class="sheet-box">
           <h4>Senses</h4>
@@ -1986,11 +2035,11 @@ function renderPlayerSheet() {
         </div>
         <div class="sheet-box">
           <h4>Class Features</h4>
-          <ul>${getClassFeatures().map((feature) => `<li>${feature}</li>`).join('')}</ul>
+          <ul>${getClassFeatures().map((feature) => `<li><strong>${feature}</strong><small class="sheet-description">${getFeatureDescription(feature)}</small></li>`).join('')}</ul>
         </div>
         <div class="sheet-box">
           <h4>Racial Traits</h4>
-          <ul>${race.traits.map((trait) => `<li>${trait}</li>`).join('')}</ul>
+          <ul>${race.traits.map((trait) => `<li><strong>${trait}</strong><small class="sheet-description">${getTraitDescription(trait)}</small></li>`).join('')}</ul>
         </div>
         <div class="sheet-box">
           <h4>Magic</h4>
@@ -2071,13 +2120,13 @@ function renderPlayerSheet() {
           <div class="sheet-box">
             <h4>Skills</h4>
             <table class="official-table skill-table"><thead><tr><th>Skill</th><th>Key</th><th>Ranks</th><th>Total</th></tr></thead><tbody>
-              ${skillsCatalog.map((skill) => `<tr><td>${skill}${getClass().skills.includes(skill) ? ' *' : ''}</td><td>${getSkillAbility(skill).toUpperCase()}</td><td>${state.skillRanks[skill] || 0}</td><td>${getSkillTotal(skill) >= 0 ? '+' : ''}${getSkillTotal(skill)}</td></tr>`).join('')}
+              ${skillsCatalog.map((skill) => `<tr><td><strong>${skill}${getClass().skills.includes(skill) ? ' *' : ''}</strong><small class="sheet-description">${skillRuleSummaries[skill] || 'A trained skill used for its listed adventuring specialty.'}</small></td><td>${getSkillAbility(skill).toUpperCase()}</td><td>${state.skillRanks[skill] || 0}</td><td>${getSkillTotal(skill) >= 0 ? '+' : ''}${getSkillTotal(skill)}</td></tr>`).join('')}
             </tbody></table>
           </div>
           <div class="sheet-box">
-            <h4>Feats</h4><ul>${state.selectedFeats.length ? state.selectedFeats.map((feat) => `<li>${feat}</li>`).join('') : '<li>None selected</li>'}</ul>
-            <h4>Special Abilities</h4><ul>${getClassFeatures().map((feature) => `<li>${feature}</li>`).join('')}</ul>
-            <h4>Racial Traits</h4><ul>${race.traits.map((trait) => `<li>${trait}</li>`).join('')}</ul>
+            <h4>Feats</h4><ul>${state.selectedFeats.length ? state.selectedFeats.map((feat) => `<li><strong>${feat}</strong><small class="sheet-description">${featRuleSummaries[feat] || 'A selectable feat that grants a specialized character benefit.'}</small></li>`).join('') : '<li>None selected</li>'}</ul>
+            <h4>Special Abilities</h4><ul>${getClassFeatures().map((feature) => `<li><strong>${feature}</strong><small class="sheet-description">${getFeatureDescription(feature)}</small></li>`).join('')}</ul>
+            <h4>Racial Traits</h4><ul>${race.traits.map((trait) => `<li><strong>${trait}</strong><small class="sheet-description">${getTraitDescription(trait)}</small></li>`).join('')}</ul>
           </div>
         </div>
         <div class="sheet-grid official-wide-grid">
