@@ -154,14 +154,12 @@
 
         <section class="panel">
           <h2>Journal Notes</h2>
-          <label>
-            Character Notes
-            <textarea id="characterNotesInput" rows="5" placeholder="Personal goals, reminders, relationships, and character details."></textarea>
-          </label>
-          <label>
-            Additional Campaign Notes
-            <textarea id="campaignNotesInput" rows="5" placeholder="Locations, clues, rewards, factions, and session notes."></textarea>
-          </label>
+          <h3>Character Notes</h3>
+          <div id="characterNotesList" class="deeds-editor-list"></div>
+          <button id="addCharacterNoteBtn" class="secondary-btn" type="button">Add Character Note</button>
+          <h3>Additional Campaign Notes</h3>
+          <div id="campaignNotesList" class="deeds-editor-list"></div>
+          <button id="addCampaignNoteBtn" class="secondary-btn" type="button">Add Campaign Note</button>
         </section>
 
         <section id="abilityScoresPanel" class="panel">

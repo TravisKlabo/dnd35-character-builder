@@ -212,6 +212,18 @@ input, select {
   color: var(--ink);
 }
 
+textarea {
+  width: 100%;
+  margin-top: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  resize: vertical;
+}
+
 .primary-btn, .secondary-btn, .accent-btn {
   border: none;
   border-radius: 8px;

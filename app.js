@@ -383,8 +383,8 @@ const state = {
   magicInventory: [],
   selectedLanguages: [],
   deeds: [],
-  characterNotes: '',
-  campaignNotes: '',
+  characterNotes: [],
+  campaignNotes: [],
   deity: 'None selected'
   ,weaponSize: 'auto'
   ,setting: 'core'
@@ -430,8 +430,10 @@ const els = {
   abilities: document.querySelector('#abilities'),
   languagesList: document.querySelector('#languagesList'),
   deedsList: document.querySelector('#deedsList'),
-  characterNotesInput: document.querySelector('#characterNotesInput'),
-  campaignNotesInput: document.querySelector('#campaignNotesInput'),
+  characterNotesList: document.querySelector('#characterNotesList'),
+  campaignNotesList: document.querySelector('#campaignNotesList'),
+  addCharacterNoteBtn: document.querySelector('#addCharacterNoteBtn'),
+  addCampaignNoteBtn: document.querySelector('#addCampaignNoteBtn'),
   addDeedBtn: document.querySelector('#addDeedBtn'),
   skillsHeading: document.querySelector('#skillsHeading'),
   skillsList: document.querySelector('#skillsList'),
@@ -1378,6 +1380,20 @@ function renderDeeds() {
   `).join('') : '<p class="language-empty">No deeds recorded yet.</p>';
 }
 
+function renderJournalNoteList(listElement, notes, type) {
+  listElement.innerHTML = notes.length ? notes.map((note, index) => `
+    <div class="deed-editor-row">
+      <textarea data-journal-note="${type}" data-journal-index="${index}" rows="3" placeholder="Write a note...">${note}</textarea>
+      <button type="button" class="remove-class-btn" data-remove-journal-note="${type}:${index}">Remove</button>
+    </div>
+  `).join('') : '<p class="language-empty">No notes recorded yet.</p>';
+}
+
+function renderJournalNoteEditors() {
+  renderJournalNoteList(els.characterNotesList, state.characterNotes, 'character');
+  renderJournalNoteList(els.campaignNotesList, state.campaignNotes, 'campaign');
+}
+
 function renderDeedsSheet() {
   const deeds = Array.isArray(state.deeds) ? state.deeds : [];
   els.deedsSheet.classList.add('active');
@@ -2155,8 +2171,8 @@ function renderPlayerSheet() {
           <div class="sheet-box"><h4>Languages</h4><p>${getAllLanguages().join(', ')}</p></div>
           <div class="sheet-box"><h4>Deity / Allegiance</h4><p>${state.deity}</p><p>${state.setting === 'dragonlance' ? 'Krynn path: ' + state.krynnPath : 'Allegiance: ____________________'}</p></div>
         </div>
-        <div class="sheet-box official-notes-box journal-notes-box"><h4>Character Notes</h4><p>${state.characterNotes || 'No character notes recorded.'}</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
-        <div class="sheet-box official-notes-box journal-notes-box"><h4>Additional Campaign Notes</h4><p>${state.campaignNotes || 'No additional campaign notes recorded.'}</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
+        <div class="sheet-box official-notes-box journal-notes-box"><h4>Character Notes</h4>${state.characterNotes.length ? state.characterNotes.map((note) => `<p>${note}</p>`).join('') : '<p>No character notes recorded.</p>'}<p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
+        <div class="sheet-box official-notes-box journal-notes-box"><h4>Additional Campaign Notes</h4>${state.campaignNotes.length ? state.campaignNotes.map((note) => `<p>${note}</p>`).join('') : '<p>No additional campaign notes recorded.</p>'}<p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
       </div>
     </div>
   `;
@@ -2392,8 +2408,8 @@ function applyCharacterData(data) {
   state.selectedSpells = Array.isArray(data.selectedSpells) ? data.selectedSpells : [];
   state.selectedLanguages = Array.isArray(data.selectedLanguages) ? [...new Set(data.selectedLanguages)] : [];
   state.deeds = Array.isArray(data.deeds) ? data.deeds.map((deed) => ({ level: Number(deed.level) || 1, text: String(deed.text || '') })) : [];
-  state.characterNotes = String(data.characterNotes || '');
-  state.campaignNotes = String(data.campaignNotes || '');
+  state.characterNotes = Array.isArray(data.characterNotes) ? data.characterNotes : data.characterNotes ? [String(data.characterNotes)] : [];
+  state.campaignNotes = Array.isArray(data.campaignNotes) ? data.campaignNotes : data.campaignNotes ? [String(data.campaignNotes)] : [];
   state.skillRanks = data.skillRanks || {};
 
   if ((data.levelUpMode || data.levelUpPending) && state.lastLevelSnapshot) {
@@ -2421,8 +2437,7 @@ function applyCharacterData(data) {
   els.settingSelect.value = state.setting;
   populateDeitySelect();
   els.deitySelect.value = state.deity;
-  els.characterNotesInput.value = state.characterNotes;
-  els.campaignNotesInput.value = state.campaignNotes;
+  renderJournalNoteEditors();
   els.krynnPathSelect.value = state.krynnPath;
   els.moonSelect.value = state.moon;
   els.prestigeClassSelect.value = state.prestigeClass;
@@ -2494,6 +2509,8 @@ function createNewCharacter() {
     weaponSize: 'auto',
     selectedLanguages: [],
     deeds: [],
+    characterNotes: [],
+    campaignNotes: [],
     deity: 'None selected'
     ,rolledScores: null
     ,abilityAssignments: {}
@@ -2578,8 +2595,8 @@ function syncStateFromInputs() {
     text: input.value.trim(),
     level: Number(document.querySelector(`[data-deed-level="${input.dataset.deedText}"]`)?.value || 1)
   })).filter((deed) => deed.text);
-  state.characterNotes = els.characterNotesInput.value;
-  state.campaignNotes = els.campaignNotesInput.value;
+  state.characterNotes = [...document.querySelectorAll('[data-journal-note="character"]')].map((input) => input.value.trim()).filter(Boolean);
+  state.campaignNotes = [...document.querySelectorAll('[data-journal-note="campaign"]')].map((input) => input.value.trim()).filter(Boolean);
   updateEquipmentRuleTriggers();
   renderEquipmentInventory();
 
@@ -2811,6 +2828,33 @@ function bindEvents() {
     renderDeeds();
     renderAllSheets();
     saveCharacterToStorage();
+  });
+  els.characterNotesList.addEventListener('input', syncStateFromInputs);
+  els.campaignNotesList.addEventListener('input', syncStateFromInputs);
+  document.addEventListener('click', (event) => {
+    const removeNote = event.target.dataset.removeJournalNote;
+    if (removeNote) {
+      const [type, indexText] = removeNote.split(':');
+      const notes = type === 'character' ? state.characterNotes : state.campaignNotes;
+      notes.splice(Number(indexText), 1);
+      renderJournalNoteEditors();
+      renderAllSheets();
+      saveCharacterToStorage();
+    }
+  });
+  els.addCharacterNoteBtn.addEventListener('click', () => {
+    state.characterNotes.push('');
+    renderJournalNoteEditors();
+    renderAllSheets();
+    saveCharacterToStorage();
+    els.characterNotesList.querySelector('textarea:last-of-type')?.focus();
+  });
+  els.addCampaignNoteBtn.addEventListener('click', () => {
+    state.campaignNotes.push('');
+    renderJournalNoteEditors();
+    renderAllSheets();
+    saveCharacterToStorage();
+    els.campaignNotesList.querySelector('textarea:last-of-type')?.focus();
   });
   els.addDeedBtn.addEventListener('click', () => {
     state.deeds.push({ level: state.level, text: '' });
