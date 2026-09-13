@@ -2326,10 +2326,20 @@ function loadCharacterFromFile(event) {
 }
 
 function syncStateFromInputs() {
+  const nextClassId = els.classSelect.value;
+  const classChangedDuringCreation = !state.characterCreated
+    && !state.levelUpMode
+    && nextClassId !== state.classId;
+  if (classChangedDuringCreation) {
+    state.selectedSkills = [];
+    state.selectedFeats = [];
+    state.selectedSpells = [];
+    state.skillRanks = {};
+  }
   state.charName = els.charName.value || 'Unnamed Hero';
   state.playerName = els.playerName.value || 'Player';
   state.raceId = els.raceSelect.value;
-  state.classId = els.classSelect.value;
+  state.classId = nextClassId;
   state.level = Number(els.levelInput.value || 1);
   updateCreationButtonLabel();
   if (state.classLevels?.length) state.classLevels[0].classId = state.classId;
@@ -2367,14 +2377,16 @@ function syncStateFromInputs() {
     state.abilities[input.dataset.ability] = Number(input.value || 10);
   });
 
-  state.selectedSkills = [...document.querySelectorAll('[data-skill]:checked')].map((input) => input.dataset.skill);
-  state.selectedFeats = [...document.querySelectorAll('[data-feat]:checked')].map((input) => input.dataset.feat);
-  state.selectedSpells = [...document.querySelectorAll('[data-spell]:checked')].map((input) => input.dataset.spell);
+  if (!classChangedDuringCreation) {
+    state.selectedSkills = [...document.querySelectorAll('[data-skill]:checked')].map((input) => input.dataset.skill);
+    state.selectedFeats = [...document.querySelectorAll('[data-feat]:checked')].map((input) => input.dataset.feat);
+    state.selectedSpells = [...document.querySelectorAll('[data-spell]:checked')].map((input) => input.dataset.spell);
 
-  document.querySelectorAll('[data-rank-skill]').forEach((input) => {
-    const skillName = input.dataset.rankSkill;
-    state.skillRanks[skillName] = Number(input.value || 0);
-  });
+    document.querySelectorAll('[data-rank-skill]').forEach((input) => {
+      const skillName = input.dataset.rankSkill;
+      state.skillRanks[skillName] = Number(input.value || 0);
+    });
+  }
 
   renderAbilities();
   renderClassLevels();
