@@ -2120,7 +2120,7 @@ function renderPlayerSheet() {
           <div class="sheet-box">
             <h4>Skills</h4>
             <table class="official-table skill-table"><thead><tr><th>Skill</th><th>Key</th><th>Ranks</th><th>Total</th></tr></thead><tbody>
-              ${skillsCatalog.map((skill) => `<tr><td><strong>${skill}${getClass().skills.includes(skill) ? ' *' : ''}</strong><small class="sheet-description">${skillRuleSummaries[skill] || 'A trained skill used for its listed adventuring specialty.'}</small></td><td>${getSkillAbility(skill).toUpperCase()}</td><td>${state.skillRanks[skill] || 0}</td><td>${getSkillTotal(skill) >= 0 ? '+' : ''}${getSkillTotal(skill)}</td></tr>`).join('')}
+              ${skillsCatalog.map((skill) => `<tr><td><strong>${skill}${getClass().skills.includes(skill) ? ' *' : ''}</strong></td><td>${getSkillAbility(skill).toUpperCase()}</td><td>${state.skillRanks[skill] || 0}</td><td>${getSkillTotal(skill) >= 0 ? '+' : ''}${getSkillTotal(skill)}</td></tr>`).join('')}
             </tbody></table>
           </div>
           <div class="sheet-box description-list-box">
