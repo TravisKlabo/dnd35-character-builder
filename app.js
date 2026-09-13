@@ -371,6 +371,7 @@ const state = {
   selectedSpells: [],
   skillRanks: {},
   weapon: 'Longsword',
+  equippedWeapons: ['Longsword'],
   armor: 'Chain Shirt',
   weaponEnhancement: 0,
   weaponAbility: 'none',
@@ -922,6 +923,41 @@ function getEnhancedWeaponName() {
   return `${bonus ? `+${bonus} ` : ''}${state.weapon}${ability}`;
 }
 
+function isRangedWeapon(weapon) {
+  return ['Shortbow', 'Longbow', 'Light Crossbow', 'Heavy Crossbow', 'Sling', 'Repeating Crossbow', 'Hand Crossbow', 'Dart', 'Javelin', 'Trident', 'Net'].includes(weapon);
+}
+
+function getEquippedWeapons() {
+  const equipped = Array.isArray(state.equippedWeapons) ? state.equippedWeapons : [state.weapon];
+  return [...new Set(equipped.filter((weapon) => weapon && weapon !== 'No Weapon'))];
+}
+
+function getEquippedWeaponRole(weapon) {
+  if (isRangedWeapon(weapon)) return 'main';
+  const meleeWeapons = getEquippedWeapons().filter((entry) => !isRangedWeapon(entry));
+  return meleeWeapons.indexOf(weapon) === 1 ? 'offhand' : 'main';
+}
+
+function toggleEquippedWeapon(weapon) {
+  const equipped = getEquippedWeapons();
+  if (equipped.includes(weapon)) {
+    state.equippedWeapons = equipped.filter((entry) => entry !== weapon);
+  } else if (isRangedWeapon(weapon)) {
+    state.equippedWeapons = [...equipped.filter((entry) => !isRangedWeapon(entry)), weapon];
+  } else {
+    const meleeWeapons = equipped.filter((entry) => !isRangedWeapon(entry));
+    if (meleeWeapons.length >= 2) {
+      window.alert('You can equip up to two melee weapons and one bow or other ranged weapon.');
+      return false;
+    }
+    state.equippedWeapons = [...equipped, weapon];
+  }
+  state.equippedWeapons = getEquippedWeapons().sort((left, right) => Number(isRangedWeapon(left)) - Number(isRangedWeapon(right)));
+  const nextPrimary = getEquippedWeapons()[0] || 'No Weapon';
+  state.weapon = nextPrimary;
+  return true;
+}
+
 function getEnhancedArmorName() {
   const bonus = Number(state.armorEnhancement || 0);
   const ability = state.armorAbility !== 'none' ? ` ${state.armorAbility}` : '';
@@ -1230,16 +1266,17 @@ function populateSelects() {
 
 function renderEquipmentInventory() {
   const weapons = state.weaponInventory || [];
+  const equippedWeapons = getEquippedWeapons();
   const armor = state.armorInventory || [];
   const magic = state.magicInventory || [];
-  const weaponDescription = (weapon) => weapon === state.weapon
-    ? `${getEnhancedWeaponName()}: ${getWeaponDamageType(weapon)} damage; ${getWeaponStats().damage}; ${state.weaponAbility === 'none' ? 'no special ability' : getWeaponAbilityDescription(state.weaponAbility)}`
+  const weaponDescription = (weapon) => equippedWeapons.includes(weapon)
+    ? `${getWeaponStats(weapon, getEquippedWeaponRole(weapon)).attack >= 0 ? '+' : ''}${getWeaponStats(weapon, getEquippedWeaponRole(weapon)).attack} attack; ${getWeaponStats(weapon, getEquippedWeaponRole(weapon)).damage} damage; ${getWeaponDamageType(weapon)}`
     : (weaponRuleSummaries[weapon] || 'Standard weapon; select it to calculate current attack and damage.');
   const armorDescription = (item) => item === state.armor
     ? `${getEnhancedArmorName()}: +${getArmorBonus()} AC; ${state.armorAbility === 'none' ? 'no special ability' : getArmorAbilityDescription(state.armorAbility)}`
     : (armorRuleSummaries[item] || 'Standard armor or shield; select it to calculate current AC and movement.');
   els.equipmentInventory.innerHTML = `
-    <div class="inventory-group"><strong>Weapons carried</strong>${weapons.length ? weapons.map((weapon, index) => `<div class="inventory-row"><span><strong>${weapon}${weapon === state.weapon ? ' • active' : ''}</strong><small>${weaponDescription(weapon)}</small></span><span class="inventory-actions"><button type="button" class="secondary-btn" data-equip-weapon="${weapon}">${weapon === state.weapon ? 'Unequip' : 'Equip'}</button><button type="button" class="remove-inventory-btn" data-remove-weapon="${index}">Remove</button></span></div>`).join('') : '<small>None</small>'}</div>
+    <div class="inventory-group"><strong>Weapons carried</strong>${weapons.length ? weapons.map((weapon, index) => `<div class="inventory-row"><span><strong>${weapon}${equippedWeapons.includes(weapon) ? ' • equipped' : ''}${weapon === state.weapon ? ' • primary' : ''}</strong><small>${weaponDescription(weapon)}</small></span><span class="inventory-actions"><button type="button" class="secondary-btn" data-equip-weapon="${weapon}">${equippedWeapons.includes(weapon) ? 'Unequip' : 'Equip'}</button><button type="button" class="remove-inventory-btn" data-remove-weapon="${index}">Remove</button></span></div>`).join('') : '<small>None</small>'}</div>
     <div class="inventory-group"><strong>Armor carried</strong>${armor.length ? armor.map((item, index) => `<div class="inventory-row"><span><strong>${item}${item === state.armor ? ' • active' : ''}</strong><small>${armorDescription(item)}</small></span><span class="inventory-actions"><button type="button" class="secondary-btn" data-equip-armor="${item}">${item === state.armor ? 'Unequip' : 'Equip'}</button><button type="button" class="remove-inventory-btn" data-remove-armor="${index}">Remove</button></span></div>`).join('') : '<small>None</small>'}</div>
     <div class="inventory-group"><strong>Magic items carried</strong>${magic.length ? magic.map((item, index) => `<div class="inventory-row"><span><strong>${item}</strong><small>${getMagicItemDescription(item)}</small></span><button type="button" class="remove-inventory-btn" data-remove-magic="${index}">Remove</button></div>`).join('') : '<small>None</small>'}</div>
     <div class="inventory-group"><strong>Other item carried</strong>${state.item !== 'No Item' ? `<div class="inventory-row"><span><strong>${state.item}</strong><small>${getEquipmentPrice(state.item)} - ${getEquipmentWeight(state.item)}</small></span><button type="button" class="remove-inventory-btn" data-remove-item="true">Remove</button></div>` : '<small>None</small>'}</div>
@@ -1928,10 +1965,10 @@ function renderPlayerSheet() {
             <table class="official-table">
                 <thead><tr><th>Active</th><th>Name</th><th>Description</th><th>Damage Type</th><th>Proficiency</th><th>Attack</th><th>Base Damage</th><th>Size-Adjusted Damage</th><th>Critical</th><th>Range</th></tr></thead>
                 <tbody>${possessedWeapons.map((weapon) => {
-                  const stats = getWeaponStats(weapon);
+                  const stats = getWeaponStats(weapon, getEquippedWeaponRole(weapon));
                   const damageType = getWeaponDamageType(weapon);
-                  const description = weapon === state.weapon ? `${getEnhancedWeaponName()}: ${state.weaponAbility === 'none' ? 'no special ability' : getWeaponAbilityDescription(state.weaponAbility)}` : (weaponRuleSummaries[weapon] || 'Standard weapon; select it to calculate current attack and damage.');
-                  return `<tr><td><input type="checkbox" class="active-weapon-checkbox" data-active-weapon="${weapon}" ${weapon === state.weapon ? 'checked' : ''} /></td><td>${weapon} (${stats.weaponSize})</td><td>${description}</td><td>${damageType}</td><td>${isWeaponProficient(weapon) ? 'Proficient' : 'Not proficient'}</td><td>${stats.attack >= 0 ? '+' : ''}${stats.attack}</td><td>${stats.baseDamage}</td><td>${stats.damage}<br><small>${stats.sizeAdjustment}</small></td><td>${stats.crit}</td><td>${stats.range}</td></tr>`;
+                  const description = getEquippedWeapons().includes(weapon) ? `${weapon === state.weapon ? 'Primary' : getEquippedWeaponRole(weapon) === 'offhand' ? 'Off-hand' : 'Equipped'}: ${state.weaponAbility === 'none' ? 'no special ability' : getWeaponAbilityDescription(state.weaponAbility)}` : (weaponRuleSummaries[weapon] || 'Standard weapon; select it to calculate current attack and damage.');
+                  return `<tr><td><input type="checkbox" class="active-weapon-checkbox" data-active-weapon="${weapon}" ${getEquippedWeapons().includes(weapon) ? 'checked' : ''} /></td><td>${weapon} (${stats.weaponSize})</td><td>${description}</td><td>${damageType}</td><td>${isWeaponProficient(weapon) ? 'Proficient' : 'Not proficient'}</td><td>${stats.attack >= 0 ? '+' : ''}${stats.attack}</td><td>${stats.baseDamage}</td><td>${stats.damage}<br><small>${stats.sizeAdjustment}</small></td><td>${stats.crit}</td><td>${stats.range}</td></tr>`;
                 }).join('')}</tbody>
             </table>
           </div>
@@ -2261,6 +2298,12 @@ function applyCharacterData(data) {
   state.moon = data.moon || 'none';
   state.prestigeClass = data.prestigeClass || 'none';
   state.weapon = data.weapon || 'Longsword';
+  state.equippedWeapons = Array.isArray(data.equippedWeapons)
+    ? [...new Set(data.equippedWeapons)]
+    : (state.weapon === 'No Weapon' ? [] : [state.weapon]);
+  if (state.weapon !== 'No Weapon' && !state.equippedWeapons.includes(state.weapon)) {
+    state.equippedWeapons.unshift(state.weapon);
+  }
   state.armor = data.armor || 'Chain Shirt';
   state.weaponEnhancement = Number(data.weaponEnhancement || 0);
   state.weaponAbility = data.weaponAbility || 'none';
@@ -2372,6 +2415,7 @@ function createNewCharacter() {
     selectedSpells: [],
     skillRanks: {},
     weapon: 'Longsword',
+    equippedWeapons: ['Longsword'],
     armor: 'Chain Shirt',
     weaponEnhancement: 0,
     weaponAbility: 'none',
@@ -2441,7 +2485,15 @@ function syncStateFromInputs() {
   state.krynnPath = els.krynnPathSelect.value;
   state.moon = els.moonSelect.value;
   state.prestigeClass = els.prestigeClassSelect.value;
-  state.weapon = els.weaponSelect.value;
+  const selectedWeapon = els.weaponSelect.value;
+  const previousPrimaryWeapon = state.weapon;
+  const equippedBeforeSelection = getEquippedWeapons();
+  state.weapon = selectedWeapon;
+  if (selectedWeapon === 'No Weapon') {
+    state.equippedWeapons = equippedBeforeSelection.filter((weapon) => weapon !== previousPrimaryWeapon);
+  } else {
+    state.equippedWeapons = [selectedWeapon, ...equippedBeforeSelection.filter((weapon) => weapon !== selectedWeapon)];
+  }
   state.armor = els.armorSelect.value;
   state.weaponEnhancement = Number(els.weaponEnhancementSelect.value || 0);
   state.weaponAbility = els.weaponAbilitySelect.value;
@@ -2646,7 +2698,7 @@ function bindEvents() {
     const equipWeapon = event.target.dataset.equipWeapon;
     const equipArmor = event.target.dataset.equipArmor;
     if (equipWeapon !== undefined) {
-      state.weapon = state.weapon === equipWeapon ? 'No Weapon' : equipWeapon;
+      if (!toggleEquippedWeapon(equipWeapon)) return;
       els.weaponSelect.value = state.weapon;
       updateEquipmentRuleTriggers();
     }
@@ -2657,11 +2709,10 @@ function bindEvents() {
     }
     if (weaponIndex !== undefined) {
       const removedWeapon = state.weaponInventory.splice(Number(weaponIndex), 1)[0];
-      if (removedWeapon === state.weapon) {
-        state.weapon = state.weaponInventory[0] || 'No Weapon';
-        els.weaponSelect.value = state.weapon;
-        updateEquipmentRuleTriggers();
-      }
+      state.equippedWeapons = getEquippedWeapons().filter((weapon) => weapon !== removedWeapon);
+      state.weapon = state.equippedWeapons[0] || 'No Weapon';
+      els.weaponSelect.value = state.weapon;
+      updateEquipmentRuleTriggers();
     }
     if (armorIndex !== undefined) {
       const removedArmor = state.armorInventory.splice(Number(armorIndex), 1)[0];
@@ -2772,8 +2823,8 @@ function bindEvents() {
   els.playerSheet.addEventListener('change', (event) => {
     const weapon = event.target.dataset.activeWeapon;
     if (!weapon) return;
-    state.weapon = weapon;
-    els.weaponSelect.value = weapon;
+    if (!toggleEquippedWeapon(weapon)) return;
+    els.weaponSelect.value = state.weapon;
     state.weaponInventory = [...new Set([...(state.weaponInventory || []), weapon])];
     updateEquipmentRuleTriggers();
     renderEquipmentInventory();
