@@ -702,6 +702,16 @@ input, select {
   grid-template-columns: minmax(0, 1.5fr) minmax(220px, 1fr);
 }
 
+.combat-grid {
+  grid-template-areas: "weapons money" "armor equipment";
+  grid-template-columns: minmax(0, 1.5fr) minmax(220px, 1fr);
+}
+
+.combat-weapons { grid-area: weapons; }
+.combat-money { grid-area: money; }
+.combat-armor { grid-area: armor; }
+.combat-equipment { grid-area: equipment; }
+
 .skills-abilities-grid {
   grid-template-columns: minmax(0, 1fr) fit-content(280px);
 }
@@ -949,6 +959,7 @@ input, select {
   }
 
   .combat-grid {
+    grid-template-areas: "weapons" "money" "armor" "equipment";
     grid-template-columns: minmax(0, 1fr);
   }
 

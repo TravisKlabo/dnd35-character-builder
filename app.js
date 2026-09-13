@@ -2063,7 +2063,7 @@ function renderPlayerSheet() {
           <span class="badge">Page 2</span>
         </div>
         <div class="sheet-grid official-wide-grid combat-grid">
-          <div class="sheet-box">
+          <div class="sheet-box combat-weapons">
             <h4>Weapons</h4>
             <table class="official-table">
                 <thead><tr><th>Active</th><th>Name</th><th>Description</th><th>Damage Type</th><th>Proficiency</th><th>Attack</th><th>Base Damage</th><th>Size-Adjusted Damage</th><th>Critical</th><th>Range</th></tr></thead>
@@ -2075,7 +2075,7 @@ function renderPlayerSheet() {
                 }).join('')}</tbody>
             </table>
           </div>
-          <div class="sheet-box">
+          <div class="sheet-box combat-armor">
             <h4>Armor & Defense</h4>
             <p><strong>Active Armor:</strong> ${getEnhancedArmorName()}</p>
             <p>${state.armorAbility === 'none' ? (armorRuleSummaries[state.armor] || 'Standard armor or shield; select it to calculate current AC and movement.') : getArmorAbilityDescription(state.armorAbility)}</p>
@@ -2098,13 +2098,11 @@ function renderPlayerSheet() {
             <p>Damage Reduction: ______</p>
             <p>Spell Resistance: ______</p>
           </div>
-        </div>
-        <div class="sheet-grid official-wide-grid">
-          <div class="sheet-box">
+          <div class="sheet-box combat-equipment">
             <h4>Equipment & Possessions</h4>
             <ul>${(state.weaponInventory || [state.weapon]).map((weapon) => `<li>${weapon}${weapon === state.weapon ? ' (active)' : ''}</li>`).join('')} ${(state.armorInventory || [state.armor]).map((item) => `<li>${item}${item === state.armor ? ' (active)' : ''}</li>`).join('')} ${(state.magicInventory || []).map((item) => `<li>${item}</li>`).join('')}<li>${state.item}</li><li>Backpack contents: ____________________</li><li>Other possessions: ____________________</li></ul>
           </div>
-          <div class="sheet-box">
+          <div class="sheet-box combat-money">
             <h4>Money</h4>
             <p>Platinum: ______ &nbsp; Gold: ______</p><p>Silver: ______ &nbsp; Copper: ______</p>
             <p>Light load: ${carry.light} lb. &nbsp; Medium: ${carry.medium} lb.</p>
