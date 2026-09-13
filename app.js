@@ -1938,7 +1938,7 @@ function renderPlayerSheet() {
   const hpProgression = getHitPointProgression().rolls.map((entry, index) => `L${index + 1}: d${entry.maximum} roll ${entry.roll}`).join(' | ');
   const statsList = abilityNames.map((ability) => `${ability.toUpperCase()}: ${state.abilities[ability]} (${mods[ability] >= 0 ? '+' : ''}${mods[ability]})`).join(' | ');
   const selectedFeatText = state.selectedFeats.length ? state.selectedFeats.join(', ') : 'None';
-  const skillListHtml = state.selectedSkills.length ? state.selectedSkills.map((skill) => `<li><strong>${skill}: ${getSkillTotal(skill) >= 0 ? '+' : ''}${getSkillTotal(skill)}</strong><small class="sheet-description">${skillRuleSummaries[skill] || 'A trained skill used for its listed adventuring specialty.'}</small></li>`).join('') : '<li>None</li>';
+  const skillListHtml = state.selectedSkills.length ? state.selectedSkills.map((skill) => `<li>${skill}: ${getSkillTotal(skill) >= 0 ? '+' : ''}${getSkillTotal(skill)}</li>`).join('') : '<li>None</li>';
   const spellcastingInfo = selectedClass.spellcaster ? `<p><strong>Spellcasting:</strong> ${getSpellSlotSummary()}</p>` : '<p><strong>Spellcasting:</strong> None</p>';
   const speed = getSpeed();
   const weaponStats = getWeaponStats();
@@ -2019,7 +2019,7 @@ function renderPlayerSheet() {
         </div>
         <div class="sheet-box">
           <h4>Feats</h4>
-          <ul>${state.selectedFeats.length ? state.selectedFeats.map((feat) => `<li><strong>${feat}</strong><small class="sheet-description">${featRuleSummaries[feat] || 'A selectable feat that grants a specialized character benefit.'}</small></li>`).join('') : '<li>None selected</li>'}</ul>
+          <ul>${state.selectedFeats.length ? state.selectedFeats.map((feat) => `<li>${feat}</li>`).join('') : '<li>None selected</li>'}</ul>
         </div>
         <div class="sheet-box">
           <h4>Senses</h4>
