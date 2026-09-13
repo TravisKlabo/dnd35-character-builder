@@ -1721,6 +1721,10 @@ function getTraitDescription(trait) {
   return descriptions[trait] || 'A racial or ancestry trait granted by the selected character lineage.';
 }
 
+function renderSkillsTable(skills) {
+  return `<table class="official-table skill-table"><thead><tr><th>Skill</th><th>Key</th><th>Ranks</th><th>Total</th></tr></thead><tbody>${skills.map((skill) => `<tr><td><strong>${skill}${getClass().skills.includes(skill) ? ' *' : ''}</strong></td><td>${getSkillAbility(skill).toUpperCase()}</td><td>${state.skillRanks[skill] || 0}</td><td>${getSkillTotal(skill) >= 0 ? '+' : ''}${getSkillTotal(skill)}</td></tr>`).join('')}</tbody></table>`;
+}
+
 function rollHitDie(sides) {
   return Math.floor(Math.random() * sides) + 1;
 }
@@ -2119,9 +2123,7 @@ function renderPlayerSheet() {
         <div class="sheet-grid official-wide-grid skills-abilities-grid">
           <div class="sheet-box">
             <h4>Skills</h4>
-            <table class="official-table skill-table"><thead><tr><th>Skill</th><th>Key</th><th>Ranks</th><th>Total</th></tr></thead><tbody>
-              ${skillsCatalog.map((skill) => `<tr><td><strong>${skill}${getClass().skills.includes(skill) ? ' *' : ''}</strong></td><td>${getSkillAbility(skill).toUpperCase()}</td><td>${state.skillRanks[skill] || 0}</td><td>${getSkillTotal(skill) >= 0 ? '+' : ''}${getSkillTotal(skill)}</td></tr>`).join('')}
-            </tbody></table>
+            <div class="skills-table-columns">${renderSkillsTable(skillsCatalog.slice(0, Math.ceil(skillsCatalog.length / 2)))}${renderSkillsTable(skillsCatalog.slice(Math.ceil(skillsCatalog.length / 2)))}</div>
           </div>
           <div class="abilities-column">
           <div class="sheet-box description-list-box feats-box">
