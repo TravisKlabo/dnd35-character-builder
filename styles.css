@@ -845,6 +845,12 @@ input, select {
   line-height: 1.35;
 }
 
+.description-list-box li,
+.sheet-description {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
 .badge {
   background: #efe7d3;
   border-radius: 999px;
@@ -921,6 +927,25 @@ input, select {
 
   .official-table {
     font-size: 0.72rem;
+  }
+
+  .official-table thead {
+    display: table-header-group;
+  }
+
+  .official-table tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .description-list-box {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .description-list-box h4 {
+    break-after: avoid;
+    page-break-after: avoid;
   }
 
   .sketch-layout {
