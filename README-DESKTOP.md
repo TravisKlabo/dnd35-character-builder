@@ -42,3 +42,13 @@ git push origin v1.0.0
 The workflow builds each installer on its native operating system. macOS builds are unsigned, so macOS may require right-clicking the app and choosing **Open** the first time.
 
 Character data continues to use browser local storage inside the desktop app. JSON export/import and printing remain available from the existing builder controls.
+
+## DM Character Roster
+
+Open `dm/index.html` for the separate DM roster dashboard. It accepts multiple JSON files exported by the builder, creates a tab for each character, and stores the imported roster in browser local storage.
+
+When running the local browser version, use:
+
+```text
+http://localhost:4173/dm/
+```

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>D&D 3.5 DM Character Roster</title>
+    <link rel="stylesheet" href="dm.css" />
+  </head>
+  <body>
+    <main class="dm-shell">
+      <header class="dm-header">
+        <div>
+          <label class="view-switcher">
+            View
+            <select id="viewSelect">
+              <option value="/dm/">DM Character Roster</option>
+              <option value="/">Character Builder</option>
+            </select>
+          </label>
+          <p class="eyebrow">Campaign reference</p>
+          <h1>DM Character Roster</h1>
+          <p class="subtitle">Import character-builder JSON files for a fast party reference.</p>
+        </div>
+        <div class="dm-actions">
+          <button id="importBtn" class="primary-btn">Import Characters</button>
+          <button id="syncBtn" class="secondary-btn">Sync Current Builder Character</button>
+          <button id="clearBtn" class="secondary-btn">Clear Roster</button>
+          <input id="fileInput" type="file" accept="application/json" multiple hidden />
+        </div>
+      </header>
+
+      <section class="party-strip" id="partyStrip"></section>
+      <nav class="character-tabs" id="characterTabs" aria-label="Characters"></nav>
+      <section id="emptyState" class="empty-state">
+        <h2>No characters loaded</h2>
+        <p>Import one or more character JSON exports to build the DM reference roster.</p>
+      </section>
+      <section id="characterView" class="character-view" hidden></section>
+    </main>
+    <script src="dm.js?v=open-builder-1"></script>
+  </body>
+</html>

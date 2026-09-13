@@ -48,6 +48,16 @@ button, input, select {
   font-size: 2rem;
 }
 
+.view-switcher {
+  display: block;
+  max-width: 240px;
+  margin-bottom: 12px;
+  color: var(--muted);
+  font: 700 0.75rem Arial, sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .panel {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -63,6 +73,36 @@ button, input, select {
   color: var(--accent-2);
 }
 
+.completion-panel {
+  position: sticky;
+  bottom: 12px;
+  z-index: 2;
+}
+
+.identity-level-btn {
+  width: 100%;
+  margin-top: 6px;
+}
+
+.completion-panel .primary-btn {
+  width: 100%;
+}
+
+.completion-status {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.completion-status.valid {
+  color: var(--good);
+}
+
+.completion-status.invalid {
+  color: var(--accent);
+}
+
 label {
   display: block;
   margin-bottom: 10px;
@@ -72,6 +112,94 @@ label {
 
 [hidden] {
   display: none !important;
+}
+
+.print-preview-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(29, 29, 29, 0.58);
+}
+
+.print-preview-modal[hidden] {
+  display: none !important;
+}
+
+.print-preview-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(1100px, 100%);
+  max-height: 94vh;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.print-preview-header,
+.print-preview-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+
+.print-preview-header h2 {
+  margin: 0;
+  color: var(--accent);
+}
+
+.print-preview-content {
+  overflow: auto;
+  padding: 18px;
+}
+
+.print-preview-content .sheet-section {
+  display: block;
+  margin-bottom: 18px;
+}
+
+.print-preview-content .sheet-section:last-child {
+  margin-bottom: 0;
+}
+
+.print-preview-content .official-page {
+  position: relative;
+  margin: 0 0 28px;
+  padding: 18px;
+  border: 1px solid #c9c0b2;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(28, 28, 28, 0.12);
+}
+
+.print-preview-content .official-page:not(:first-child)::before {
+  content: 'PAGE BREAK';
+  position: absolute;
+  top: -22px;
+  left: 0;
+  right: 0;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+.print-preview-content .official-page:not(:first-child) {
+  border-top: 3px solid var(--accent-2);
+}
+
+.print-preview-actions {
+  justify-content: flex-end;
+  border-top: 1px solid var(--line);
+  border-bottom: 0;
 }
 
 input, select {
@@ -139,6 +267,17 @@ input, select {
   margin: 6px 0 4px;
 }
 
+.class-display {
+  display: block;
+  margin-top: 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f4efe5;
+  color: var(--accent-2);
+  font-weight: 700;
+}
+
 .ability-box span {
   display: block;
   font-size: 0.8rem;
@@ -151,6 +290,20 @@ input, select {
   color: var(--muted);
   font-size: 0.82rem;
   line-height: 1.4;
+}
+
+.ability-increase-panel {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f4efe5;
+}
+
+.ability-increase-panel small {
+  color: var(--muted);
 }
 
 .point-buy-cost {
@@ -195,6 +348,85 @@ input, select {
   margin-bottom: 8px;
 }
 
+.class-levels-list {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.class-level-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.hp-roll-result {
+  margin: 10px 0 0;
+  color: var(--accent-2);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.class-level-row {
+  display: grid;
+  grid-template-columns: 1fr 72px auto;
+  gap: 6px;
+  align-items: center;
+}
+
+.class-level-row select,
+.class-level-row input {
+  margin-top: 0;
+}
+
+.class-level-row small {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.deeds-editor-list {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.deed-editor-row {
+  display: grid;
+  grid-template-columns: 58px 1fr auto;
+  gap: 6px;
+  align-items: center;
+}
+
+.deed-editor-row input {
+  margin-top: 0;
+}
+
+.deed-record-box {
+  display: grid;
+  gap: 8px;
+}
+
+.deed-record {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.deed-record:last-child {
+  border-bottom: 0;
+}
+
+
+.remove-class-btn {
+  border: 0;
+  padding: 4px 6px;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 0.78rem;
+}
+
 .rules-trigger {
   cursor: help;
   text-decoration: underline dotted;
@@ -211,6 +443,57 @@ input, select {
   color: var(--accent);
   font-size: 0.78rem;
   text-align: left;
+}
+
+.equipment-add-btn {
+  display: block;
+  margin-top: 6px;
+  padding: 6px 8px;
+  font-size: 0.78rem;
+}
+
+
+.equipment-inventory {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.inventory-group {
+  display: grid;
+  gap: 5px;
+}
+
+.inventory-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 7px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  font-size: 0.82rem;
+}
+
+.inventory-row span {
+  display: grid;
+  gap: 3px;
+}
+
+.inventory-row small {
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.remove-inventory-btn {
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 0.75rem;
 }
 
 .rules-popover {
@@ -302,6 +585,14 @@ input, select {
   display: block;
   margin-bottom: 4px;
   color: var(--accent-2);
+}
+
+.save-pill small {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.25;
 }
 
 .warnings-box {
@@ -459,6 +750,14 @@ input, select {
   max-height: 600px;
 }
 
+.custom-character-portrait {
+  display: block;
+  width: 100%;
+  max-height: 600px;
+  object-fit: contain;
+  background: #fbf7ee;
+}
+
 .sketch-notes {
   display: grid;
   gap: 12px;
@@ -546,6 +845,10 @@ input, select {
 }
 
 @media print {
+  .print-preview-modal {
+    display: none !important;
+  }
+
   body {
     background: white;
   }

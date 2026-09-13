@@ -68,8 +68,15 @@ const spellSlotsTable = {
   20: [15, 13, 12, 10, 9]
 };
 
+const spellsKnownTable = {
+  bard: { 1: [4, 2], 2: [5, 2], 3: [6, 3], 4: [6, 3, 0], 5: [6, 4, 2], 6: [6, 4, 3], 7: [6, 4, 3, 0], 8: [6, 4, 4, 2], 9: [6, 4, 4, 3], 10: [6, 4, 4, 3, 0] },
+  sorcerer: { 1: [4, 2], 2: [5, 2], 3: [5, 3], 4: [6, 3, 0], 5: [6, 4, 2], 6: [7, 4, 3], 7: [7, 5, 3, 1], 8: [8, 5, 4, 2], 9: [8, 5, 4, 3], 10: [9, 5, 4, 3, 1] }
+};
+
 const skillsCatalog = [
-  'Appraise', 'Balance', 'Bluff', 'Climb', 'Concentration', 'Craft', 'Diplomacy', 'Disable Device', 'Escape Artist', 'Forgery', 'Handle Animal', 'Heal', 'Hide', 'Intimidate', 'Jump', 'Knowledge (arcana)', 'Knowledge (nature)', 'Knowledge (religion)', 'Listen', 'Move Silently', 'Open Lock', 'Perform', 'Ride', 'Search', 'Sense Motive', 'Sleight of Hand', 'Spellcraft', 'Spot', 'Survival', 'Swim', 'Use Magic Device'
+  'Appraise', 'Balance', 'Bluff', 'Climb', 'Concentration', 'Craft', 'Diplomacy', 'Disable Device', 'Escape Artist', 'Forgery', 'Handle Animal', 'Heal', 'Hide', 'Intimidate', 'Jump',
+  'Knowledge (arcana)', 'Knowledge (architecture and engineering)', 'Knowledge (dungeoneering)', 'Knowledge (geography)', 'Knowledge (history)', 'Knowledge (local)', 'Knowledge (nature)', 'Knowledge (nobility and royalty)', 'Knowledge (planes)', 'Knowledge (religion)', 'Knowledge (psionics)',
+  'Listen', 'Move Silently', 'Open Lock', 'Perform (act)', 'Perform (comedy)', 'Perform (dance)', 'Perform (keyboard instruments)', 'Perform (mime)', 'Perform (oratory)', 'Perform (percussion instruments)', 'Perform (sing)', 'Perform (string instruments)', 'Perform (wind instruments)', 'Ride', 'Search', 'Sense Motive', 'Sleight of Hand', 'Spellcraft', 'Spot', 'Survival', 'Swim', 'Use Magic Device'
 ];
 
 const featCatalog = [
@@ -78,6 +85,13 @@ const featCatalog = [
   { name: 'Great Cleave', prereqs: { str: 13, bab: 4, feats: ['Power Attack', 'Cleave'] } },
   { name: 'Improved Initiative', prereqs: {} },
   { name: 'Weapon Focus', prereqs: { bab: 1 } },
+  { name: 'Martial Weapon Proficiency', prereqs: {} },
+  { name: 'Exotic Weapon Proficiency', prereqs: {} },
+  { name: 'Armor Proficiency (Light)', prereqs: {} },
+  { name: 'Armor Proficiency (Medium)', prereqs: {} },
+  { name: 'Armor Proficiency (Heavy)', prereqs: {} },
+  { name: 'Shield Proficiency', prereqs: {} },
+  { name: 'Tower Shield Proficiency', prereqs: { feats: ['Shield Proficiency'] } },
   { name: 'Weapon Specialization', prereqs: { str: 13, bab: 4, feats: ['Weapon Focus'], class: ['fighter'] } },
   { name: 'Lightning Reflexes', prereqs: {} },
   { name: 'Iron Will', prereqs: {} },
@@ -118,19 +132,44 @@ featCatalog.push(
 );
 
 const weaponCatalog = [
-  'Longsword', 'Shortsword', 'Greatsword', 'Rapier', 'Scimitar', 'Dagger', 'Quarterstaff',
+  'No Weapon', 'Longsword', 'Shortsword', 'Greatsword', 'Rapier', 'Scimitar', 'Dagger', 'Quarterstaff',
   'Battleaxe', 'Greataxe', 'Warhammer', 'Mace', 'Spear', 'Shortbow', 'Longbow',
-  'Light Crossbow', 'Heavy Crossbow', 'Sling'
+  'Light Crossbow', 'Heavy Crossbow', 'Sling', 'Handaxe', 'Javelin', 'Trident', 'Net', 'Whip',
+  'Kukri', 'Kama', 'Sickle', 'Glaive', 'Halberd', 'Guisarme', 'Spiked Chain', 'Falchion',
+  'Lance', 'Morningstar', 'Light Mace', 'Light Hammer', 'Shuriken', 'Repeating Crossbow',
+  'Hand Crossbow', 'Sap', 'Nunchaku', 'Sai', 'Siangham', 'Dart'
 ];
 const armorCatalog = [
-  'Padded Armor', 'Leather Armor', 'Studded Leather', 'Hide Armor', 'Chain Shirt',
-  'Scale Mail', 'Chainmail', 'Breastplate', 'Splint Mail', 'Half-Plate', 'Full Plate'
+  'No Armor', 'Padded Armor', 'Leather Armor', 'Studded Leather', 'Hide Armor', 'Chain Shirt',
+  'Scale Mail', 'Chainmail', 'Breastplate', 'Splint Mail', 'Half-Plate', 'Full Plate',
+  'Buckler', 'Light Wooden Shield', 'Heavy Wooden Shield', 'Light Steel Shield', 'Heavy Steel Shield',
+  'Tower Shield', 'Mithral Chain Shirt', 'Mithral Breastplate', 'Mithral Full Plate'
 ];
 const itemCatalog = [
   'Backpack', 'Bedroll', 'Flint and Steel', 'Rations (5 days)', 'Waterskin', 'Rope (50 ft.)',
   'Grappling Hook', 'Crowbar', 'Lantern', 'Oil (1 pint)', 'Torches (5)', 'Tent',
   'Healing Potion', 'Antitoxin', 'Healer\'s Kit', 'Thieves\' Tools', 'Holy Symbol',
-  'Spell Component Pouch', 'Musical Instrument', 'Amulet of Natural Armor +1', 'Traveler\'s Cloak'
+  'Spell Component Pouch', 'Musical Instrument', 'Amulet of Natural Armor +1', 'Traveler\'s Cloak',
+  '[Arms and Equipment Guide] Alchemical Silver', '[Arms and Equipment Guide] Adamantine Weapon',
+  '[Arms and Equipment Guide] Cold Iron Weapon', '[Arms and Equipment Guide] Sunrod',
+  '[Complete Adventurer] Tanglefoot Bag', '[Complete Adventurer] Thunderstone', '[Complete Adventurer] Smokestick',
+  '[Complete Adventurer] Silk Rope', '[Complete Warrior] Masterwork Tool', '[Complete Warrior] Manacles',
+  '[Magic Item Compendium] Bag of Holding', '[Magic Item Compendium] Handy Haversack',
+  '[Magic Item Compendium] Cloak of Resistance +1', '[Magic Item Compendium] Boots of Elvenkind',
+  '[Magic Item Compendium] Gloves of Dexterity +2', '[Magic Item Compendium] Belt of Giant Strength +2',
+  '[Dungeon Master Guide] Wand of Cure Light Wounds', '[Dungeon Master Guide] Scroll of Identify',
+  '[Dungeon Master Guide] Ring of Protection +1', '[Dungeon Master Guide] Headband of Intellect +2',
+  '[Stormwrack] Watercraft, Rowboat', '[Stormwrack] Grappling Hook, Aquatic',
+  '[Sandstorm] Desert Outfit', '[Frostburn] Cold-Weather Outfit', '[Lords of Madness] Goggles of Night',
+  '[Dragonlance] Dragonlance', '[Dragonlance] Steel Coin Purse', '[Dragonlance] Gnomish Device',
+  '[Dragonlance] Kender Hoopak', '[Dragonlance] Draconian Eggshell Armor'
+];
+const magicItemCatalog = [
+  'Potion of Cure Light Wounds', 'Potion of Shield of Faith +2', 'Scroll of Identify', 'Scroll of Protection from Evil',
+  'Wand of Cure Light Wounds', 'Wand of Magic Missile', 'Cloak of Resistance +1', 'Ring of Protection +1',
+  'Amulet of Natural Armor +1', 'Belt of Giant Strength +2', 'Gloves of Dexterity +2', 'Headband of Intellect +2',
+  'Boots of Elvenkind', 'Goggles of Night', 'Bag of Holding', 'Handy Haversack', 'Pearl of Power (1st)',
+  'Dust of Disappearance', 'Rope of Climbing', 'Decanter of Endless Water', 'Dragonlance Relic', 'Krynn Moonstone'
 ];
 const spellCatalog = [
   { name: 'Acid Splash', level: 0 },
@@ -223,15 +262,29 @@ const defaultScores = { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 };
 const STORAGE_KEY = 'dnd35-character-builder-v1';
 
 const state = {
+  characterId: (globalThis.crypto?.randomUUID?.() || `character-${Date.now()}-${Math.random().toString(36).slice(2)}`),
   charName: 'Unnamed Hero',
   playerName: 'Player',
   raceId: 'human',
   classId: 'fighter',
+  classLevels: [{ classId: 'fighter', levels: 1 }],
+  characterCreated: false,
+  finalizedLevel: 0,
+  levelUpMode: false,
+  levelUpStartingClasses: null,
+  levelUpPending: false,
+  lastLevelSnapshot: null,
+  hpRollPending: false,
+  pendingLevelClass: 'fighter',
   level: 1,
   alignment: 'Lawful Good',
   gender: 'unspecified',
+  customPortrait: '',
   abilityMode: 'rolled',
   pointBuyBudget: 32,
+  abilityIncreases: [],
+  hpRolls: [],
+  lastHpRollResult: null,
   abilities: { ...defaultScores },
   rolledScores: null,
   abilityAssignments: {},
@@ -241,8 +294,16 @@ const state = {
   skillRanks: {},
   weapon: 'Longsword',
   armor: 'Chain Shirt',
+  weaponEnhancement: 0,
+  weaponAbility: 'none',
+  armorEnhancement: 0,
+  armorAbility: 'none',
   item: 'Backpack',
+  weaponInventory: ['Longsword'],
+  armorInventory: ['Chain Shirt'],
+  magicInventory: [],
   selectedLanguages: [],
+  deeds: [],
   deity: 'None selected'
   ,weaponSize: 'auto'
   ,setting: 'core'
@@ -256,48 +317,88 @@ const els = {
   playerName: document.querySelector('#playerName'),
   raceSelect: document.querySelector('#raceSelect'),
   classSelect: document.querySelector('#classSelect'),
+  classDisplay: document.querySelector('#classDisplay'),
+  classLevelsList: document.querySelector('#classLevelsList'),
+  classLevelsPanel: document.querySelector('#classLevelsPanel'),
+  addClassLevelBtn: document.querySelector('#addClassLevelBtn'),
+  rollHpBtn: document.querySelector('#rollHpBtn'),
+  advancementClassSelect: document.querySelector('#advancementClassSelect'),
+  undoLevelBtn: document.querySelector('#undoLevelBtn'),
+  hpRollResult: document.querySelector('#hpRollResult'),
   levelInput: document.querySelector('#levelInput'),
+  levelDisplay: document.querySelector('#levelDisplay'),
   alignmentSelect: document.querySelector('#alignmentSelect'),
   deitySelect: document.querySelector('#deitySelect'),
   genderSelect: document.querySelector('#genderSelect'),
+  portraitInput: document.querySelector('#portraitInput'),
+  clearPortraitBtn: document.querySelector('#clearPortraitBtn'),
   abilityModeSelect: document.querySelector('#abilityModeSelect'),
   pointBuyBudgetSelect: document.querySelector('#pointBuyBudgetSelect'),
   pointBuyBudgetLabel: document.querySelector('#pointBuyBudgetLabel'),
   abilityMethodInfo: document.querySelector('#abilityMethodInfo'),
+  abilityScoresPanel: document.querySelector('#abilityScoresPanel'),
+  abilityGenerationControls: document.querySelector('#abilityGenerationControls'),
+  abilityIncreasePanel: document.querySelector('#abilityIncreasePanel'),
+  abilityIncreaseSelect: document.querySelector('#abilityIncreaseSelect'),
+  applyAbilityIncreaseBtn: document.querySelector('#applyAbilityIncreaseBtn'),
+  abilityIncreaseInfo: document.querySelector('#abilityIncreaseInfo'),
   settingSelect: document.querySelector('#settingSelect'),
   krynnPathSelect: document.querySelector('#krynnPathSelect'),
   moonSelect: document.querySelector('#moonSelect'),
   prestigeClassSelect: document.querySelector('#prestigeClassSelect'),
   abilities: document.querySelector('#abilities'),
   languagesList: document.querySelector('#languagesList'),
+  deedsList: document.querySelector('#deedsList'),
+  addDeedBtn: document.querySelector('#addDeedBtn'),
   skillsHeading: document.querySelector('#skillsHeading'),
   skillsList: document.querySelector('#skillsList'),
   featsHeading: document.querySelector('#featsHeading'),
   featsList: document.querySelector('#featsList'),
+  spellsHeading: document.querySelector('#spellsHeading'),
+  spellCapacityInfo: document.querySelector('#spellCapacityInfo'),
   spellList: document.querySelector('#spellList'),
+  completeCharacterBtn: document.querySelector('#completeCharacterBtn'),
+  levelUpBtn: document.querySelector('#levelUpBtn'),
+  undoLastLevelBtn: document.querySelector('#undoLastLevelBtn'),
+  completionStatus: document.querySelector('#completionStatus'),
   weaponSelect: document.querySelector('#weaponSelect'),
   armorSelect: document.querySelector('#armorSelect'),
+  weaponEnhancementSelect: document.querySelector('#weaponEnhancementSelect'),
+  weaponAbilitySelect: document.querySelector('#weaponAbilitySelect'),
+  armorEnhancementSelect: document.querySelector('#armorEnhancementSelect'),
+  armorAbilitySelect: document.querySelector('#armorAbilitySelect'),
   weaponSizeSelect: document.querySelector('#weaponSizeSelect'),
   weaponRulesTrigger: document.querySelector('#weaponRulesTrigger'),
   armorRulesTrigger: document.querySelector('#armorRulesTrigger'),
   itemSelect: document.querySelector('#itemSelect'),
+  addWeaponBtn: document.querySelector('#addWeaponBtn'),
+  addArmorBtn: document.querySelector('#addArmorBtn'),
+  magicItemSelect: document.querySelector('#magicItemSelect'),
+  addMagicItemBtn: document.querySelector('#addMagicItemBtn'),
+  equipmentInventory: document.querySelector('#equipmentInventory'),
   summaryCard: document.querySelector('#summaryCard'),
   playerSheet: document.querySelector('#playerSheet'),
   spellSheet: document.querySelector('#spellSheet'),
   itemSheet: document.querySelector('#itemSheet'),
   sketchSheet: document.querySelector('#sketchSheet'),
+  deedsSheet: document.querySelector('#deedsSheet'),
   rollStatsBtn: document.querySelector('#rollStatsBtn'),
   generatePlayerBtn: document.querySelector('#generatePlayerBtn'),
   generateSpellBtn: document.querySelector('#generateSpellBtn'),
   generateItemBtn: document.querySelector('#generateItemBtn'),
   generateSketchBtn: document.querySelector('#generateSketchBtn'),
+  choosePortraitBtn: document.querySelector('#choosePortraitBtn'),
   saveBtn: document.querySelector('#saveBtn'),
   newBtn: document.querySelector('#newBtn'),
   exportBtn: document.querySelector('#exportBtn'),
   loadBtn: document.querySelector('#loadBtn'),
   importCharacterInput: document.querySelector('#importCharacterInput'),
   printBtn: document.querySelector('#printBtn')
-  ,rulesPopover: document.querySelector('#rulesPopover')
+  ,rulesPopover: document.querySelector('#rulesPopover'),
+  printPreviewModal: document.querySelector('#printPreviewModal'),
+  printPreviewContent: document.querySelector('#printPreviewContent'),
+  closePrintPreviewBtn: document.querySelector('#closePrintPreviewBtn'),
+  printPreviewPrintBtn: document.querySelector('#printPreviewPrintBtn')
 };
 
 function modifier(value) {
@@ -315,6 +416,127 @@ function getRace() {
 
 function getClass() {
   return classCatalog.find((candidate) => candidate.id === state.classId) || classCatalog[0];
+}
+
+function getClassLevels() {
+  const entries = Array.isArray(state.classLevels) && state.classLevels.length
+    ? state.classLevels
+    : [{ classId: state.classId, levels: state.level }];
+  return entries
+    .map((entry) => ({ classId: entry.classId, levels: Math.max(0, Number(entry.levels) || 0) }))
+    .filter((entry) => entry.levels > 0);
+}
+
+function getClassLevelEntries() {
+  return getClassLevels().map((entry) => ({
+    ...entry,
+    classData: classCatalog.find((candidate) => candidate.id === entry.classId) || classCatalog[0]
+  }));
+}
+
+function getTotalClassLevels() {
+  return getClassLevels().reduce((total, entry) => total + entry.levels, 0);
+}
+
+function getClassBreakdownLabel() {
+  const totals = [];
+  getClassLevelEntries().forEach((entry) => {
+    const existing = totals.find((item) => item.classId === entry.classId);
+    if (existing) existing.levels += entry.levels;
+    else totals.push({ classId: entry.classId, name: entry.classData.name, levels: entry.levels });
+  });
+  return totals.map((entry) => `${entry.name} ${entry.levels} ${entry.levels === 1 ? 'rank' : 'ranks'}`).join(' | ');
+}
+
+function captureLevelSnapshot() {
+  return {
+    classLevels: getClassLevels().map((entry) => ({ ...entry })),
+    hpRolls: (state.hpRolls || []).map((entry) => ({ ...entry })),
+    abilityIncreases: (state.abilityIncreases || []).map((entry) => ({ ...entry })),
+    selectedSkills: [...state.selectedSkills],
+    selectedFeats: [...state.selectedFeats],
+    selectedSpells: [...state.selectedSpells],
+    finalizedLevel: state.finalizedLevel
+  };
+}
+
+function restoreLevelSnapshot(snapshot) {
+  state.classLevels = snapshot.classLevels.map((entry) => ({ ...entry }));
+  state.hpRolls = snapshot.hpRolls.map((entry) => ({ ...entry }));
+  state.abilityIncreases = snapshot.abilityIncreases.map((entry) => ({ ...entry }));
+  state.selectedSkills = [...snapshot.selectedSkills];
+  state.selectedFeats = [...snapshot.selectedFeats];
+  state.selectedSpells = [...snapshot.selectedSpells];
+  state.finalizedLevel = snapshot.finalizedLevel;
+  state.levelUpMode = false;
+  state.levelUpPending = false;
+  state.hpRollPending = false;
+  state.lastLevelSnapshot = null;
+  syncPrimaryClassAndLevel();
+  renderClassLevels();
+  renderAbilities();
+  renderSkills();
+  renderFeats();
+  renderSpells();
+  renderAllSheets();
+  saveCharacterToStorage();
+}
+
+function updateCreationLockState() {
+  const locked = state.characterCreated;
+  updateCreationButtonLabel();
+  const lockedFields = [
+    els.charName, els.playerName, els.raceSelect, els.alignmentSelect, els.settingSelect,
+    els.krynnPathSelect, els.moonSelect, els.prestigeClassSelect, els.abilityModeSelect, els.pointBuyBudgetSelect
+  ];
+  lockedFields.forEach((field) => {
+    if (field) field.disabled = locked;
+  });
+  els.classSelect.hidden = locked;
+  els.classDisplay.hidden = !locked;
+  els.classDisplay.textContent = getClassBreakdownLabel();
+  els.levelInput.hidden = locked;
+  els.levelDisplay.hidden = !locked;
+  els.levelDisplay.textContent = `Level ${state.level}`;
+  els.rollStatsBtn.disabled = locked;
+  els.abilityGenerationControls.hidden = locked;
+  els.levelUpBtn.hidden = !locked;
+  els.levelUpBtn.textContent = state.levelUpMode ? 'Finalize' : 'Level Up Character';
+  els.undoLastLevelBtn.hidden = !locked || state.levelUpMode || !state.lastLevelSnapshot;
+  els.completeCharacterBtn.hidden = locked;
+}
+
+function syncPrimaryClassAndLevel() {
+  const entries = getClassLevels();
+  state.classId = entries[0]?.classId || 'fighter';
+  state.level = Math.max(1, getTotalClassLevels());
+  updateCreationButtonLabel();
+}
+
+function renderClassLevels() {
+  syncPrimaryClassAndLevel();
+  els.classLevelsPanel.hidden = !state.levelUpMode;
+  updateCreationLockState();
+  const classOptions = classCatalog.map((entry) => `<option value="${entry.id}">${entry.name}</option>`).join('');
+  els.advancementClassSelect.innerHTML = classOptions;
+  els.advancementClassSelect.value = state.pendingLevelClass || state.classId;
+  els.undoLevelBtn.disabled = !state.levelUpPending;
+  els.addClassLevelBtn.disabled = state.levelUpPending;
+  els.rollHpBtn.disabled = !state.hpRollPending;
+  const latestHpRoll = state.lastHpRollResult || state.hpRolls?.[state.hpRolls.length - 1];
+  const pendingClass = classCatalog.find((entry) => entry.id === (state.pendingLevelClass || state.classId)) || classCatalog[0];
+  els.hpRollResult.textContent = state.hpRollPending
+    ? `Pending HP roll: ${pendingClass.name} uses d${pendingClass.hitDie}. Click Roll HP to roll this die.`
+    : latestHpRoll
+      ? `HP roll: d${latestHpRoll.maximum} = ${latestHpRoll.roll}. Constitution modifier: ${getAbilityModifiers().con >= 0 ? '+' : ''}${getAbilityModifiers().con}. HP gained: ${Math.max(1, Number(latestHpRoll.roll) + getAbilityModifiers().con)}.`
+      : '';
+  els.classLevelsList.innerHTML = `<p class="language-empty">Current levels: ${getClassBreakdownLabel()}${state.levelUpPending ? ' · One level pending' : ''}</p>`;
+  renderAbilityIncreaseControl();
+  if (els.skillsList && els.featsList && els.spellList) {
+    renderSkills();
+    renderFeats();
+    renderSpells();
+  }
 }
 
 function getPrestigeClass() {
@@ -338,6 +560,8 @@ function getSkillAbility(skillName) {
     'Sleight of Hand': 'dex', Spellcraft: 'int', Spot: 'wis', Survival: 'wis', Swim: 'str', 'Use Magic Device': 'cha'
   };
 
+  if (skillName.startsWith('Knowledge (')) return 'int';
+  if (skillName.startsWith('Perform (')) return 'cha';
   return map[skillName] || 'int';
 }
 
@@ -345,30 +569,42 @@ function getSkillTotal(skillName) {
   const ability = getSkillAbility(skillName);
   const mod = getAbilityModifiers()[ability] || 0;
   const rank = Number(state.skillRanks[skillName] || 0);
-  const isClassSkill = getClass().skills.includes(skillName);
-  return mod + rank + (isClassSkill ? 3 : 0);
+  const isClassSkill = getAllClassSkills().includes(skillName);
+  return mod + rank;
+}
+
+function getAllClassSkills() {
+  const skills = getClassLevelEntries().flatMap((entry) => {
+    const classSkills = [...(entry.classData.skills || [])];
+    if (entry.classId === 'bard') {
+      classSkills.push(...skillsCatalog.filter((skill) => skill.startsWith('Perform (')));
+      classSkills.push('Knowledge (arcana)', 'Knowledge (history)', 'Knowledge (local)', 'Knowledge (nobility and royalty)');
+    }
+    if (entry.classId === 'cleric') classSkills.push('Knowledge (religion)', 'Knowledge (planes)', 'Knowledge (history)');
+    if (entry.classId === 'druid') classSkills.push('Knowledge (nature)', 'Knowledge (geography)');
+    if (entry.classId === 'ranger') classSkills.push('Knowledge (nature)', 'Knowledge (geography)', 'Knowledge (dungeoneering)');
+    if (entry.classId === 'rogue') classSkills.push('Knowledge (local)', 'Knowledge (architecture and engineering)', 'Knowledge (dungeoneering)');
+    if (entry.classId === 'sorcerer' || entry.classId === 'wizard') classSkills.push('Knowledge (arcana)', 'Knowledge (dungeoneering)', 'Knowledge (planes)', 'Knowledge (history)');
+    return classSkills;
+  });
+  return [...new Set(skills)];
 }
 
 function getLevelBab() {
-  const selectedClass = getClass();
-  if (selectedClass.bab === 'fast') return state.level;
-  if (selectedClass.bab === 'medium') return Math.floor(state.level * 0.75);
-  return Math.floor(state.level * 0.5);
+  return getClassLevelEntries().reduce((total, entry) => {
+    const progression = entry.classData.bab === 'fast' ? entry.levels : entry.classData.bab === 'medium' ? entry.levels * 0.75 : entry.levels * 0.5;
+    return total + progression;
+  }, 0) | 0;
 }
 
 function getLevelSave(baseName) {
   const mods = getAbilityModifiers();
-  const selectedClass = getClass();
-  const levelFactor = Math.floor((state.level + 1) / 2);
-
-  if (baseName === 'fort') {
-    return 2 + levelFactor + mods.con + (selectedClass.saves.fort === 'good' ? 2 : 0);
-  }
-  if (baseName === 'ref') {
-    return 2 + levelFactor + mods.dex + (selectedClass.saves.ref === 'good' ? 2 : 0);
-  }
-
-  return 2 + levelFactor + mods.wis + (selectedClass.saves.will === 'good' ? 2 : 0);
+  const ability = baseName === 'fort' ? mods.con : baseName === 'ref' ? mods.dex : mods.wis;
+  const saveTotal = getClassLevelEntries().reduce((total, entry) => {
+    const good = entry.classData.saves[baseName] === 'good';
+    return total + (good ? 2 + Math.floor(entry.levels / 2) : Math.floor(entry.levels / 3));
+  }, 0);
+  return saveTotal + ability;
 }
 
 function getSpellSlotSummary() {
@@ -377,51 +613,75 @@ function getSpellSlotSummary() {
     return 'No spellcasting progression';
   }
 
-  const table = spellSlotsTable[Math.min(state.level, 20)] || [2];
+  const table = (spellSlotsTable[Math.min(state.level, 20)] || [2]).slice(0, getMaxSpellLevel());
   const summary = table.map((slots, index) => `${index + 1}st: ${slots} slots`).join(' | ');
   return `Caster level ${state.level} — ${summary}`;
 }
 
 function getFeatSlots() {
-  const selectedClass = getClass();
   const generalSlots = 1 + Math.floor(state.level / 3);
-  const bonusSlots = selectedClass.id === 'fighter' ? Math.ceil(state.level / 2) : 0;
+  const bonusSlots = getClassLevels().filter((entry) => entry.classId === 'fighter').reduce((total, entry) => total + 1 + Math.floor(entry.levels / 2), 0);
   const humanBonus = state.raceId === 'human' ? 1 : 0;
   return generalSlots + bonusSlots + humanBonus;
 }
 
 function getSkillPointsPerLevel() {
-  const basePoints = getClass().skillPoints + getAbilityModifiers().int + (state.raceId === 'human' ? 1 : 0);
-  return Math.max(1, basePoints);
+  const firstClass = getClassLevelEntries()[0]?.classData || getClass();
+  return Math.max(1, firstClass.skillPoints + getAbilityModifiers().int + (state.raceId === 'human' ? 1 : 0));
 }
 
 function getAvailableSkillPoints() {
-  return getSkillPointsPerLevel() * (state.level === 1 ? 4 : state.level);
+  let points = 0;
+  let levelNumber = 0;
+  getClassLevelEntries().forEach((entry) => {
+    for (let classLevel = 0; classLevel < entry.levels; classLevel += 1) {
+      const perLevel = Math.max(1, entry.classData.skillPoints + getAbilityModifiers().int + (state.raceId === 'human' ? 1 : 0));
+      points += perLevel * (levelNumber === 0 ? 4 : 1);
+      levelNumber += 1;
+    }
+  });
+  return points;
 }
 
 function getSpentSkillPoints() {
   return Object.entries(state.skillRanks).reduce((total, [skill, value]) => {
     const ranks = Number(value || 0);
-    return total + (getClass().skills.includes(skill) ? ranks : ranks * 2);
+    return total + (getAllClassSkills().includes(skill) ? ranks : ranks * 2);
   }, 0);
 }
 
 function getMaxSpellLevel() {
   const selectedClass = getClass();
   if (!selectedClass.spellcaster) return -1;
-  if (selectedClass.id === 'paladin' || selectedClass.id === 'ranger') {
-    return state.level < 4 ? 0 : Math.min(4, Math.ceil((state.level - 2) / 4));
-  }
-  return Math.min(9, Math.ceil(state.level / 2));
+  const progression = {
+    bard: [0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6],
+    cleric: [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9],
+    druid: [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9],
+    sorcerer: [0, 1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9],
+    wizard: [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9],
+    paladin: [0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4],
+    ranger: [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4]
+  }[selectedClass.id];
+  return progression?.[Math.min(state.level, progression.length - 1)] ?? -1;
+}
+
+function getSpellSelectionCapacity() {
+  const selectedClass = getClass();
+  const maxSpellLevel = getMaxSpellLevel();
+  if (!selectedClass.spellcaster || maxSpellLevel < 1) return 0;
+  const knownTable = spellsKnownTable[selectedClass.id]?.[Math.min(state.level, 10)];
+  if (knownTable) return knownTable.reduce((total, known) => total + known, 0);
+  return (spellSlotsTable[Math.min(state.level, 20)] || []).slice(0, maxSpellLevel).reduce((total, slots) => total + slots, 0);
 }
 
 function getClassFeatures() {
-  const selectedClass = getClass();
-  const progression = classFeatureProgression[selectedClass.id] || {};
-  const unlocked = Object.entries(progression)
-    .filter(([level]) => Number(level) <= state.level)
-    .map(([level, feature]) => `Level ${level}: ${feature}`);
-  return [...selectedClass.features, ...unlocked];
+  return getClassLevelEntries().flatMap((entry) => {
+    const progression = classFeatureProgression[entry.classData.id] || {};
+    const unlocked = Object.entries(progression)
+      .filter(([level]) => Number(level) <= entry.levels)
+      .map(([level, feature]) => `${entry.classData.name} ${level}: ${feature}`);
+    return [`${entry.classData.name}: ${entry.classData.features.join(', ')}`, ...unlocked];
+  });
 }
 
 function getRuleWarnings() {
@@ -446,8 +706,10 @@ function getRuleWarnings() {
   }
 
   Object.entries(state.skillRanks).forEach(([skill, rank]) => {
-    if (Number(rank) > maxSkillRank) {
-      warnings.push(`${skill} cannot exceed ${maxSkillRank} ranks at level ${state.level}.`);
+    const isClassSkill = getAllClassSkills().includes(skill);
+    const maxRank = isClassSkill ? maxSkillRank : Math.floor(maxSkillRank / 2);
+    if (Number(rank) > maxRank) {
+      warnings.push(`${skill} cannot exceed ${maxRank} ranks at level ${state.level}${isClassSkill ? '' : ' as a cross-class skill'}.`);
     }
   });
 
@@ -455,7 +717,8 @@ function getRuleWarnings() {
   featPrereqs.forEach((feat) => {
     const prereqs = feat.prereqs || {};
     abilityNames.forEach((ability) => {
-      if (prereqs[ability] && mods[ability] < prereqs[ability]) {
+      const adjustedScore = withRaceBonus(ability, getRace());
+      if (prereqs[ability] && adjustedScore < prereqs[ability]) {
         warnings.push(`${feat.name} requires ${ability.toUpperCase()} ${prereqs[ability]}.`);
       }
     });
@@ -512,6 +775,13 @@ function getRuleWarnings() {
     warnings.push('The selected weapon is more than one size category away from the character and may be unusable under standard 3.5 rules.');
   }
 
+  if (!isWeaponProficient(state.weapon)) {
+    warnings.push(`${state.weapon} is not a proficient weapon for this character; attacks take the standard nonproficiency penalty.`);
+  }
+  if (!isArmorProficient(state.armor)) {
+    warnings.push(`${state.armor} is not proficient for this character; armor or shield penalties apply.`);
+  }
+
   const maxSpellLevel = getMaxSpellLevel();
   state.selectedSpells.forEach((spellName) => {
     const spell = spellCatalog.find((entry) => entry.name === spellName);
@@ -527,7 +797,7 @@ function deriver() {
   const race = getRace();
   const selectedClass = getClass();
   const mods = getAbilityModifiers();
-  const hp = selectedClass.hitDie + mods.con;
+  const hp = getHitPointProgression().total;
   const bab = getLevelBab();
   const initiative = mods.dex;
   const fort = getLevelSave('fort');
@@ -560,25 +830,82 @@ function getArmorBonus() {
   const armorBonuses = {
     'Padded Armor': 1, 'Leather Armor': 2, 'Studded Leather': 3, 'Hide Armor': 3,
     'Chain Shirt': 4, 'Scale Mail': 4, Chainmail: 5, Breastplate: 5,
-    'Splint Mail': 6, 'Half-Plate': 7, 'Full Plate': 8
+    'Splint Mail': 6, 'Half-Plate': 7, 'Full Plate': 8,
+    Buckler: 1, 'Light Wooden Shield': 1, 'Heavy Wooden Shield': 2,
+    'Light Steel Shield': 1, 'Heavy Steel Shield': 2, 'Tower Shield': 4,
+    'Mithral Chain Shirt': 4, 'Mithral Breastplate': 5, 'Mithral Full Plate': 8
   };
-  return armorBonuses[state.armor] || 0;
+  return (armorBonuses[state.armor] || 0) + Number(state.armorEnhancement || 0);
 }
 
-function getWeaponStats() {
+function getEnhancedWeaponName() {
+  const bonus = Number(state.weaponEnhancement || 0);
+  const ability = state.weaponAbility !== 'none' ? ` ${state.weaponAbility}` : '';
+  return `${bonus ? `+${bonus} ` : ''}${state.weapon}${ability}`;
+}
+
+function getEnhancedArmorName() {
+  const bonus = Number(state.armorEnhancement || 0);
+  const ability = state.armorAbility !== 'none' ? ` ${state.armorAbility}` : '';
+  return `${bonus ? `+${bonus} ` : ''}${state.armor}${ability}`;
+}
+
+function getWeaponAbilityDescription(ability) {
+  return {
+    flaming: 'adds 1d6 fire damage', frost: 'adds 1d6 cold damage', shock: 'adds 1d6 electricity damage',
+    keen: 'improves the weapon threat range', holy: 'deals extra damage to evil foes', bane: 'deals extra damage to its chosen foe type'
+  }[ability] || 'special weapon ability';
+}
+
+function getArmorAbilityDescription(ability) {
+  return {
+    fortification: 'offers a chance to negate critical hits and sneak attacks', glamered: 'can change its visible appearance',
+    shadow: 'improves Hide checks', slick: 'improves Escape Artist checks'
+  }[ability] || 'special armor ability';
+}
+
+function getMagicItemDescription(item) {
+  const descriptions = {
+    'Potion of Cure Light Wounds': 'Consumable potion that restores a small amount of hit points.',
+    'Scroll of Identify': 'Single-use spell scroll for identifying magic items.',
+    'Wand of Cure Light Wounds': 'Charged item that casts cure light wounds.',
+    'Cloak of Resistance +1': 'Grants a +1 resistance bonus on saving throws.',
+    'Ring of Protection +1': 'Grants a +1 deflection bonus to AC.',
+    'Belt of Giant Strength +2': 'Grants a +2 enhancement bonus to Strength.',
+    'Gloves of Dexterity +2': 'Grants a +2 enhancement bonus to Dexterity.',
+    'Headband of Intellect +2': 'Grants a +2 enhancement bonus to Intelligence.',
+    'Boots of Elvenkind': 'Grants a bonus on Move Silently checks.',
+    'Goggles of Night': 'Grants darkvision to a creature that lacks it.',
+    'Bag of Holding': 'Stores more equipment than its physical size suggests.',
+    'Handy Haversack': 'Provides organized extradimensional storage with quick access.',
+    'Pearl of Power (1st)': 'Allows a spellcaster to recall one prepared 1st-level spell.',
+    'Rope of Climbing': 'Magic rope that assists with climbing and securing itself.',
+    'Dragonlance Relic': 'Dragonlance setting relic; exact powers depend on the campaign.',
+    'Krynn Moonstone': 'Dragonlance setting focus associated with lunar magic.'
+  };
+  return descriptions[item] || 'Magic item; consult the item rules summary for its campaign-specific effects.';
+}
+
+function getWeaponStats(weaponName = state.weapon, role = 'main') {
   const { mods } = deriver();
-  const weapon = state.weapon || 'Longsword';
+  const weapon = weaponName || 'Longsword';
   const attackBonus = mods.str + getLevelBab();
 
   const damage = (die, bonus) => `${die}${bonus >= 0 ? '+' : ''}${bonus}`;
   const finesseAttack = mods.dex + getLevelBab();
   const baseDamageDice = {
+    'No Weapon': '1d3',
     Longsword: '1d8', Shortsword: '1d6', Greatsword: '2d6', Rapier: '1d6', Scimitar: '1d6',
     Dagger: '1d4', Quarterstaff: '1d6', Battleaxe: '1d8', Greataxe: '1d12', Warhammer: '1d8',
     Mace: '1d8', Spear: '1d8', Shortbow: '1d6', Longbow: '1d8', 'Light Crossbow': '1d8',
-    'Heavy Crossbow': '1d10', Sling: '1d4'
+    'Heavy Crossbow': '1d10', Sling: '1d4', Handaxe: '1d6', Javelin: '1d6', Trident: '1d8', Net: '1d4',
+    Whip: '1d3', Kukri: '1d4', Kama: '1d6', Sickle: '1d6', Glaive: '1d10', Halberd: '1d10',
+    Guisarme: '2d4', 'Spiked Chain': '2d4', Falchion: '2d4', Lance: '1d8', Morningstar: '1d8',
+    'Light Mace': '1d6', 'Light Hammer': '1d4', Shuriken: '1d2', 'Repeating Crossbow': '1d8',
+    'Hand Crossbow': '1d4', Sap: '1d6', Nunchaku: '1d6', Sai: '1d4', Siangham: '1d6', Dart: '1d4'
   };
   const map = {
+    'No Weapon': { attack: attackBonus, damage: damage('1d3', mods.str), crit: '×2', range: '5 ft.' },
     Longsword: { attack: attackBonus, damage: damage('1d8', mods.str), crit: '19-20/x2', range: '5 ft.' },
     Shortsword: { attack: finesseAttack, damage: damage('1d6', mods.str), crit: '19-20/x2', range: '5 ft.' },
     Greatsword: { attack: attackBonus, damage: damage('2d6', mods.str), crit: '19-20/x2', range: '5 ft.' },
@@ -595,35 +922,162 @@ function getWeaponStats() {
     Longbow: { attack: finesseAttack, damage: '1d8', crit: '×3', range: '100 ft.' },
     'Light Crossbow': { attack: finesseAttack, damage: '1d8', crit: '19-20/x2', range: '80 ft.' },
     'Heavy Crossbow': { attack: finesseAttack, damage: '1d10', crit: '19-20/x2', range: '120 ft.' },
-    Sling: { attack: finesseAttack, damage: damage('1d4', mods.str), crit: '×2', range: '50 ft.' }
+    Sling: { attack: finesseAttack, damage: damage('1d4', mods.str), crit: '×2', range: '50 ft.' },
+    Handaxe: { attack: attackBonus, damage: damage('1d6', mods.str), crit: '×3', range: '10 ft.' },
+    Javelin: { attack: attackBonus, damage: damage('1d6', mods.str), crit: '×2', range: '30 ft.' },
+    Trident: { attack: attackBonus, damage: damage('1d8', mods.str), crit: '×2', range: '20 ft.' },
+    Net: { attack: finesseAttack, damage: '—', crit: '—', range: '10 ft.' },
+    Whip: { attack: finesseAttack, damage: damage('1d3', mods.str), crit: '×2', range: '15 ft.' },
+    Kukri: { attack: finesseAttack, damage: damage('1d4', mods.str), crit: '18-20/x2', range: '5 ft.' },
+    Kama: { attack: finesseAttack, damage: damage('1d6', mods.str), crit: '×2', range: '5 ft.' },
+    Sickle: { attack: attackBonus, damage: damage('1d6', mods.str), crit: '×2', range: '5 ft.' },
+    Glaive: { attack: attackBonus, damage: damage('1d10', mods.str), crit: '×3', range: '10 ft.' },
+    Halberd: { attack: attackBonus, damage: damage('1d10', mods.str), crit: '×3', range: '10 ft.' },
+    Guisarme: { attack: attackBonus, damage: damage('2d4', mods.str), crit: '×3', range: '10 ft.' },
+    'Spiked Chain': { attack: attackBonus, damage: damage('2d4', mods.str), crit: '×2', range: '10 ft.' },
+    Falchion: { attack: attackBonus, damage: damage('2d4', mods.str), crit: '18-20/x2', range: '5 ft.' },
+    Lance: { attack: attackBonus, damage: damage('1d8', mods.str), crit: '×3', range: '10 ft.' },
+    Morningstar: { attack: attackBonus, damage: damage('1d8', mods.str), crit: '×2', range: '5 ft.' },
+    'Light Mace': { attack: attackBonus, damage: damage('1d6', mods.str), crit: '×2', range: '5 ft.' },
+    'Light Hammer': { attack: attackBonus, damage: damage('1d4', mods.str), crit: '×2', range: '20 ft.' },
+    Shuriken: { attack: finesseAttack, damage: damage('1d2', mods.str), crit: '×2', range: '10 ft.' },
+    'Repeating Crossbow': { attack: finesseAttack, damage: '1d8', crit: '19-20/x2', range: '80 ft.' },
+    'Hand Crossbow': { attack: finesseAttack, damage: '1d4', crit: '19-20/x2', range: '120 ft.' },
+    Sap: { attack: attackBonus, damage: damage('1d6', mods.str), crit: '×2', range: '5 ft.' },
+    Nunchaku: { attack: attackBonus, damage: damage('1d6', mods.str), crit: '×2', range: '5 ft.' },
+    Sai: { attack: attackBonus, damage: damage('1d4', mods.str), crit: '×2', range: '5 ft.' },
+    Siangham: { attack: attackBonus, damage: damage('1d6', mods.str), crit: '×2', range: '5 ft.' },
+    Dart: { attack: finesseAttack, damage: damage('1d4', mods.str), crit: '×2', range: '20 ft.' }
   };
 
-  const profile = map[weapon] || map.Longsword;
+  const profile = map[weapon] || map['No Weapon'];
   const sizeDelta = getWeaponSizeDelta();
   const adjustedDie = adjustWeaponDamageDie(baseDamageDice[weapon] || '1d8', sizeDelta);
-  const rangedWithoutStrength = ['Shortbow', 'Longbow', 'Light Crossbow', 'Heavy Crossbow'].includes(weapon);
+  const rangedWithoutStrength = ['Shortbow', 'Longbow', 'Light Crossbow', 'Heavy Crossbow', 'Repeating Crossbow', 'Hand Crossbow', 'Dart'].includes(weapon);
   const damageBonus = rangedWithoutStrength ? '' : `${mods.str >= 0 ? '+' : ''}${mods.str}`;
-  const baseDamage = `${baseDamageDice[weapon] || '1d8'}${damageBonus}`;
+  const baseDamage = weapon === 'No Weapon' ? `${adjustWeaponDamageDie('1d3', getRace().size === 'Small' ? -1 : 0)}${damageBonus}` : `${baseDamageDice[weapon] || '1d8'}${damageBonus}`;
   const sizeAdjustment = sizeDelta === 0 ? 'No size adjustment' : `${sizeDelta > 0 ? '+' : ''}${sizeDelta} damage die step${Math.abs(sizeDelta) === 1 ? '' : 's'}`;
+  const isLight = ['No Weapon', 'Shortsword', 'Rapier', 'Dagger'].includes(weapon);
+  const hasTwoWeaponFighting = state.selectedFeats.includes('Two-Weapon Fighting');
+  const offhandPenalty = role === 'offhand' ? (hasTwoWeaponFighting ? (isLight ? -2 : -4) : (isLight ? -4 : -6)) : 0;
+  const offhandDamageBonus = role === 'offhand' ? Math.floor(mods.str / 2) : mods.str;
+  const specialDamage = { flaming: '+1d6 fire', frost: '+1d6 cold', shock: '+1d6 electricity' }[state.weaponAbility] || '';
   return {
     ...profile,
-    attack: profile.attack - (sizeDelta * 2),
-    damage: `${adjustedDie}${damageBonus}`,
+    attack: profile.attack - (sizeDelta * 2) + offhandPenalty + Number(state.weaponEnhancement || 0) - (isWeaponProficient(weapon) ? 0 : 4),
+    damage: `${adjustedDie}${offhandDamageBonus + Number(state.weaponEnhancement || 0) >= 0 ? '+' : ''}${offhandDamageBonus + Number(state.weaponEnhancement || 0)}${specialDamage ? ` ${specialDamage}` : ''}`,
     baseDamage,
     sizeAdjustment,
+    offhandCapable: isLight || ['Longsword', 'Battleaxe', 'Warhammer', 'Mace', 'Scimitar'].includes(weapon),
+    offhandPenalty,
     weaponSize: getEffectiveWeaponSize(),
     sizeDelta
   };
 }
 
+function getWeaponDamageType(weapon) {
+  const types = {
+    'No Weapon': 'bludgeoning', Longsword: 'slashing', Shortsword: 'piercing', Greatsword: 'slashing',
+    Rapier: 'piercing', Scimitar: 'slashing', Dagger: 'piercing', Quarterstaff: 'bludgeoning',
+    Battleaxe: 'slashing', Greataxe: 'slashing', Warhammer: 'bludgeoning', Mace: 'bludgeoning',
+    Spear: 'piercing', Shortbow: 'piercing', Longbow: 'piercing', 'Light Crossbow': 'piercing',
+    'Heavy Crossbow': 'piercing', Sling: 'bludgeoning', Handaxe: 'slashing', Javelin: 'piercing',
+    Trident: 'piercing', Net: '—', Whip: 'slashing', Kukri: 'slashing', Kama: 'slashing', Sickle: 'slashing',
+    Glaive: 'slashing', Halberd: 'piercing/slashing', Guisarme: 'slashing', 'Spiked Chain': 'piercing',
+    Falchion: 'slashing', Lance: 'piercing', Morningstar: 'bludgeoning/piercing', 'Light Mace': 'bludgeoning',
+    'Light Hammer': 'bludgeoning', Shuriken: 'piercing', 'Repeating Crossbow': 'piercing',
+    'Hand Crossbow': 'piercing', Sap: 'bludgeoning', Nunchaku: 'bludgeoning', Sai: 'piercing', Siangham: 'piercing', Dart: 'piercing'
+  };
+  return types[weapon] || '—';
+}
+
+function isWeaponProficient(weapon) {
+  const feats = state.selectedFeats || [];
+  if (weapon === 'No Weapon') return true;
+  const simpleWeapons = ['Club', 'Dagger', 'Dart', 'Javelin', 'Light Crossbow', 'Heavy Crossbow', 'Light Mace', 'Mace', 'Quarterstaff', 'Sickle', 'Sling', 'Spear', 'Light Hammer'];
+  const martialWeapons = ['Battleaxe', 'Falchion', 'Glaive', 'Greataxe', 'Guisarme', 'Halberd', 'Handaxe', 'Lance', 'Longbow', 'Longsword', 'Morningstar', 'Rapier', 'Scimitar', 'Shortbow', 'Shortsword', 'Trident', 'Warhammer'];
+  const classIds = [...new Set([state.classId, ...getClassLevelEntries().map((entry) => entry.classId)])];
+  const specialWeapons = {
+    bard: ['Longsword', 'Rapier', 'Shortsword', 'Shortbow', 'Whip', 'Sap'],
+    rogue: ['Hand Crossbow', 'Rapier', 'Shortsword', 'Shortbow', 'Sap'],
+    monk: ['Dagger', 'Handaxe', 'Javelin', 'Kama', 'Nunchaku', 'Quarterstaff', 'Sai', 'Shuriken', 'Siangham', 'Sling', 'Light Crossbow', 'Heavy Crossbow'],
+    druid: ['Dagger', 'Dart', 'Quarterstaff', 'Scimitar', 'Sickle', 'Sling', 'Spear']
+  };
+  const fullSimple = classIds.some((classId) => ['barbarian', 'bard', 'cleric', 'fighter', 'paladin', 'ranger', 'rogue', 'sorcerer', 'wizard'].includes(classId));
+  const fullMartial = classIds.some((classId) => ['barbarian', 'fighter', 'paladin', 'ranger'].includes(classId));
+  return (fullSimple && simpleWeapons.includes(weapon))
+    || (fullMartial && martialWeapons.includes(weapon))
+    || classIds.some((classId) => (specialWeapons[classId] || []).includes(weapon))
+    || feats.includes('Martial Weapon Proficiency')
+    || feats.includes('Exotic Weapon Proficiency');
+}
+
+function getArmorCategory(armor) {
+  if (armor.includes('Shield')) return 'shield';
+  if (['Padded Armor', 'Leather Armor', 'Studded Leather', 'Chain Shirt', 'Mithral Chain Shirt'].includes(armor)) return 'light';
+  if (['Hide Armor', 'Scale Mail', 'Chainmail', 'Breastplate', 'Mithral Breastplate'].includes(armor)) return 'medium';
+  if (['Splint Mail', 'Half-Plate', 'Full Plate', 'Mithral Full Plate'].includes(armor)) return 'heavy';
+  return 'none';
+}
+
+function isArmorProficient(armor) {
+  const category = getArmorCategory(armor);
+  if (category === 'none' || armor === 'No Armor') return true;
+  const feats = state.selectedFeats || [];
+  const classIds = [...new Set([state.classId, ...getClassLevelEntries().map((entry) => entry.classId)])];
+  const fullArmor = classIds.some((id) => ['cleric', 'fighter', 'paladin'].includes(id));
+  const mediumArmor = fullArmor || classIds.some((id) => ['barbarian', 'druid', 'ranger'].includes(id));
+  const lightArmor = mediumArmor || classIds.some((id) => ['bard', 'rogue'].includes(id));
+  const druidMetalRestriction = classIds.includes('druid') && /Chain|Breastplate|Splint|Half-Plate|Full Plate|Steel|Mithral/.test(armor);
+  if (druidMetalRestriction && !classIds.some((id) => ['fighter', 'paladin'].includes(id))) return false;
+  if (category === 'shield') {
+    if (armor === 'Tower Shield') return classIds.includes('fighter') || feats.includes('Tower Shield Proficiency');
+    return classIds.some((id) => ['barbarian', 'bard', 'cleric', 'druid', 'fighter', 'paladin', 'ranger'].includes(id)) || feats.includes('Shield Proficiency');
+  }
+  if (category === 'light') return lightArmor || feats.includes('Armor Proficiency (Light)');
+  if (category === 'medium') return mediumArmor || feats.includes('Armor Proficiency (Medium)');
+  return fullArmor || feats.includes('Armor Proficiency (Heavy)');
+}
+
 function getSpeed() {
-  const { race } = deriver();
-  if (race.id === 'dwarf' || race.id === 'halfling') return 20;
-  return 30;
+  const race = getRace();
+  const selectedClass = getClass();
+  const baseSpeed = race.size === 'Small' ? 20 : 30;
+  const armorLimitsSpeed = ['Scale Mail', 'Chainmail', 'Splint Mail', 'Half-Plate', 'Full Plate'].includes(state.armor);
+  let speed = armorLimitsSpeed ? (race.size === 'Small' ? 15 : 20) : baseSpeed;
+
+  if (selectedClass.id === 'barbarian' && !armorLimitsSpeed) {
+    speed += 10;
+  }
+
+  if (selectedClass.id === 'monk' && !armorLimitsSpeed) {
+    const monkSpeedBonus = [0, 0, 0, 10, 10, 10, 20, 20, 20, 30, 30, 30, 40, 40, 40, 50, 50, 50, 60, 60, 60];
+    speed += monkSpeedBonus[Math.min(20, Math.max(1, state.level))] || 0;
+  }
+
+  return speed;
 }
 
 function getCarryCapacity() {
-  return Math.max(10, state.abilities.str * 15);
+  const table = {
+    1: [3, 6, 10], 2: [6, 13, 20], 3: [10, 20, 30], 4: [13, 26, 40], 5: [16, 33, 50],
+    6: [20, 40, 60], 7: [23, 46, 70], 8: [26, 53, 80], 9: [30, 60, 90], 10: [33, 66, 100],
+    11: [38, 76, 115], 12: [43, 86, 130], 13: [50, 100, 150], 14: [58, 116, 175], 15: [66, 133, 200],
+    16: [76, 153, 230], 17: [86, 173, 260], 18: [100, 200, 300], 19: [116, 233, 350], 20: [133, 266, 400],
+    21: [153, 306, 460], 22: [173, 346, 520], 23: [200, 400, 600], 24: [230, 460, 690], 25: [266, 533, 800],
+    26: [306, 613, 920], 27: [346, 693, 1040], 28: [400, 800, 1200], 29: [460, 920, 1380], 30: [533, 1066, 1600]
+  };
+  const strength = Math.max(1, Number(state.abilities.str) || 10);
+  let values = table[Math.min(30, strength)] || table[30];
+  if (strength > 30) {
+    const multiplier = 4 ** Math.floor((strength - 30) / 10);
+    values = values.map((value) => value * multiplier);
+  }
+  const sizeMultiplier = getRace().size === 'Small' ? 0.5 : 1;
+  const light = Math.floor(values[0] * sizeMultiplier);
+  const medium = Math.floor(values[1] * sizeMultiplier);
+  const heavy = Math.floor(values[2] * sizeMultiplier);
+  return { light, medium, heavy, maximum: heavy, liftOverhead: heavy, liftGround: heavy * 2, drag: heavy * 5 };
 }
 
 function rollAbilityScore() {
@@ -641,6 +1095,19 @@ function getPointBuyCost(score) {
 
 function getPointBuyTotal() {
   return abilityNames.reduce((total, ability) => total + getPointBuyCost(state.abilities[ability]), 0);
+}
+
+function getAllowedAbilityIncreases() {
+  return Math.floor(state.level / 4);
+}
+
+function renderAbilityIncreaseControl() {
+  const allowed = getAllowedAbilityIncreases();
+  const used = state.abilityIncreases.length;
+  const remaining = Math.max(0, allowed - used);
+  const visible = state.characterCreated && remaining > 0;
+  els.abilityIncreasePanel.hidden = !visible;
+  els.abilityIncreaseInfo.textContent = visible ? `${remaining} ability increase${remaining === 1 ? '' : 's'} available.` : '';
 }
 
 function setAbilityMode(mode) {
@@ -663,12 +1130,14 @@ function populateSelects() {
   const weaponOptions = weaponCatalog.map((weapon) => `<option value="${weapon}">${weapon}</option>`).join('');
   const armorOptions = armorCatalog.map((armor) => `<option value="${armor}">${armor}</option>`).join('');
   const itemOptions = itemCatalog.map((item) => `<option value="${item}">${item}</option>`).join('');
+  const magicItemOptions = magicItemCatalog.map((item) => `<option value="${item}">${item}</option>`).join('');
 
   els.raceSelect.innerHTML = raceOptions;
   els.classSelect.innerHTML = classOptions;
   els.weaponSelect.innerHTML = weaponOptions;
   els.armorSelect.innerHTML = armorOptions;
   els.itemSelect.innerHTML = itemOptions;
+  els.magicItemSelect.innerHTML = magicItemOptions;
 
   els.raceSelect.value = state.raceId;
   els.classSelect.value = state.classId;
@@ -677,7 +1146,25 @@ function populateSelects() {
   els.weaponSizeSelect.value = state.weaponSize;
   els.itemSelect.value = state.item;
   updateEquipmentRuleTriggers();
+  renderEquipmentInventory();
   populateDeitySelect();
+}
+
+function renderEquipmentInventory() {
+  const weapons = state.weaponInventory || [];
+  const armor = state.armorInventory || [];
+  const magic = state.magicInventory || [];
+  const weaponDescription = (weapon) => weapon === state.weapon
+    ? `${getEnhancedWeaponName()}: ${getWeaponDamageType(weapon)} damage; ${getWeaponStats().damage}; ${state.weaponAbility === 'none' ? 'no special ability' : getWeaponAbilityDescription(state.weaponAbility)}`
+    : (weaponRuleSummaries[weapon] || 'Standard weapon; select it to calculate current attack and damage.');
+  const armorDescription = (item) => item === state.armor
+    ? `${getEnhancedArmorName()}: +${getArmorBonus()} AC; ${state.armorAbility === 'none' ? 'no special ability' : getArmorAbilityDescription(state.armorAbility)}`
+    : (armorRuleSummaries[item] || 'Standard armor or shield; select it to calculate current AC and movement.');
+  els.equipmentInventory.innerHTML = `
+    <div class="inventory-group"><strong>Weapons carried</strong>${weapons.length ? weapons.map((weapon, index) => `<div class="inventory-row"><span><strong>${weapon}${weapon === state.weapon ? ' • active' : ''}</strong><small>${weaponDescription(weapon)}</small></span><button type="button" class="remove-inventory-btn" data-remove-weapon="${index}">Remove</button></div>`).join('') : '<small>None</small>'}</div>
+    <div class="inventory-group"><strong>Armor carried</strong>${armor.length ? armor.map((item, index) => `<div class="inventory-row"><span><strong>${item}${item === state.armor ? ' • active' : ''}</strong><small>${armorDescription(item)}</small></span><button type="button" class="remove-inventory-btn" data-remove-armor="${index}">Remove</button></div>`).join('') : '<small>None</small>'}</div>
+    <div class="inventory-group"><strong>Magic items carried</strong>${magic.length ? magic.map((item, index) => `<div class="inventory-row"><span><strong>${item}</strong><small>${getMagicItemDescription(item)}</small></span><button type="button" class="remove-inventory-btn" data-remove-magic="${index}">Remove</button></div>`).join('') : '<small>None</small>'}</div>
+  `;
 }
 
 function getAutomaticLanguages() {
@@ -718,6 +1205,35 @@ function populateDeitySelect() {
   els.deitySelect.innerHTML = options.map((deity) => `<option value="${deity}" ${deity === state.deity ? 'selected' : ''}>${deity}</option>`).join('');
 }
 
+function renderDeeds() {
+  const deeds = Array.isArray(state.deeds) ? state.deeds : [];
+  els.deedsList.innerHTML = deeds.length ? deeds.map((deed, index) => `
+    <div class="deed-editor-row">
+      <input type="number" min="1" max="20" data-deed-level="${index}" value="${deed.level || 1}" aria-label="Deed level" />
+      <input type="text" data-deed-text="${index}" value="${deed.text || ''}" placeholder="What happened?" aria-label="Deed description" />
+      <button type="button" class="remove-class-btn" data-remove-deed="${index}">Remove</button>
+    </div>
+  `).join('') : '<p class="language-empty">No deeds recorded yet.</p>';
+}
+
+function renderDeedsSheet() {
+  const deeds = Array.isArray(state.deeds) ? state.deeds : [];
+  els.deedsSheet.classList.add('active');
+  els.deedsSheet.innerHTML = `
+    <div class="official-page deeds-page">
+      <div class="sheet-header">
+        <h2>${state.charName} - Deeds & Notable Events</h2>
+        <span class="badge">Campaign record</span>
+      </div>
+      <div class="sheet-box deed-record-box">
+        <p>Record adventures, honors, discoveries, allies, enemies, and other events worth remembering.</p>
+        ${deeds.length ? deeds.map((deed) => `<div class="deed-record"><strong>Level ${deed.level || 1}</strong><span>${deed.text || 'Unrecorded deed'}</span></div>`).join('') : '<p>No deeds recorded yet.</p>'}
+      </div>
+      <div class="sheet-box official-notes-box"><h4>Additional Campaign Notes</h4><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
+    </div>
+  `;
+}
+
 function renderAbilities() {
   const selectedRace = getRace();
   const hasRolledScores = state.abilityMode === 'rolled' && Array.isArray(state.rolledScores) && state.rolledScores.length === abilityNames.length;
@@ -725,6 +1241,7 @@ function renderAbilities() {
   els.pointBuyBudgetLabel.hidden = !pointBuyMode;
   els.pointBuyBudgetSelect.value = String(state.pointBuyBudget);
   els.rollStatsBtn.hidden = state.abilityMode !== 'rolled';
+  renderAbilityIncreaseControl();
   const pointBuyRemaining = state.pointBuyBudget - getPointBuyTotal();
   els.abilityMethodInfo.textContent = pointBuyMode
     ? pointBuyRemaining >= 0
@@ -740,8 +1257,8 @@ function renderAbilities() {
     const mod = modifier(withRaceBonus(ability, selectedRace));
     const assignment = state.abilityAssignments[ability] ?? abilityNames.indexOf(ability);
     const scoreControl = hasRolledScores
-      ? `<select data-score-slot="${ability}" aria-label="Score assigned to ${ability.toUpperCase()}">${state.rolledScores.map((rolledScore, index) => `<option value="${index}" ${index === assignment ? 'selected' : ''}>${rolledScore}</option>`).join('')}</select>`
-      : `<input data-ability="${ability}" type="number" min="${pointBuyMode ? 8 : 1}" max="${pointBuyMode ? 15 : 40}" value="${score}" />`;
+      ? `<select data-score-slot="${ability}" aria-label="Score assigned to ${ability.toUpperCase()}" ${state.characterCreated ? 'disabled' : ''}>${state.rolledScores.map((rolledScore, index) => `<option value="${index}" ${index === assignment ? 'selected' : ''}>${rolledScore}</option>`).join('')}</select>`
+      : `<input data-ability="${ability}" type="number" min="${pointBuyMode ? 8 : 1}" max="${pointBuyMode ? 15 : 40}" value="${score}" ${state.characterCreated ? 'disabled' : ''} />`;
     const pointCost = pointBuyMode ? `<small class="point-buy-cost">Cost ${getPointBuyCost(score)}</small>` : '';
     return `
       <div class="ability-box">
@@ -757,7 +1274,7 @@ function renderAbilities() {
 }
 
 function renderSkills() {
-  const classSkills = getClass().skills || [];
+  const classSkills = getAllClassSkills();
   const totalRanks = getSpentSkillPoints();
   const maxRanks = getAvailableSkillPoints();
   els.skillsHeading.textContent = `Skills [${totalRanks}/${maxRanks} ranks]`;
@@ -765,8 +1282,10 @@ function renderSkills() {
     const isChecked = state.selectedSkills.includes(skill) || classSkills.includes(skill);
     const checked = isChecked ? 'checked' : '';
     const rankCost = classSkills.includes(skill) ? 1 : 2;
-    const disabled = !isChecked && totalRanks + rankCost > maxRanks ? 'disabled' : '';
-    const rank = state.skillRanks[skill] ?? (classSkills.includes(skill) ? 1 : 0);
+    const choicesLocked = state.characterCreated && state.level <= state.finalizedLevel;
+    const disabled = choicesLocked || (!isChecked && totalRanks + rankCost > maxRanks) ? 'disabled' : '';
+    const maxRank = classSkills.includes(skill) ? state.level + 3 : Math.floor((state.level + 3) / 2);
+    const rank = Math.min(maxRank, state.skillRanks[skill] ?? 0);
     const total = getSkillTotal(skill);
     return `
       <div class="skill-row">
@@ -775,7 +1294,7 @@ function renderSkills() {
           <span class="rules-trigger" data-rule-type="skill" data-rule-name="${skill}" title="Click for rules summary">${skill}${classSkills.includes(skill) ? ' • class' : ''}</span>
         </label>
         <div class="skill-rank-box">
-          <input type="number" data-rank-skill="${skill}" min="0" max="20" value="${rank}" />
+          <input type="number" data-rank-skill="${skill}" min="0" max="${maxRank}" value="${rank}" ${choicesLocked ? 'disabled' : ''} />
           <small>tot ${total >= 0 ? '+' : ''}${total}</small>
         </div>
       </div>
@@ -789,9 +1308,10 @@ function renderFeats() {
   const selectedCount = state.selectedFeats.length;
   const maxFeats = getFeatSlots();
   els.featsHeading.textContent = `Feats [${selectedCount}/${maxFeats}]`;
+  const choicesLocked = state.characterCreated && state.level <= state.finalizedLevel;
   els.featsList.innerHTML = featCatalog.map((featEntry) => `
     <label class="check-item">
-      <input type="checkbox" data-feat="${featEntry.name}" ${state.selectedFeats.includes(featEntry.name) ? 'checked' : ''} ${!state.selectedFeats.includes(featEntry.name) && selectedCount >= maxFeats ? 'disabled' : ''} />
+      <input type="checkbox" data-feat="${featEntry.name}" ${state.selectedFeats.includes(featEntry.name) ? 'checked' : ''} ${choicesLocked || (!state.selectedFeats.includes(featEntry.name) && selectedCount >= maxFeats) ? 'disabled' : ''} />
       <span class="rules-trigger" data-rule-type="feat" data-rule-name="${featEntry.name}" title="Click for rules summary">${featEntry.name}${featEntry.setting === 'dragonlance' ? ' • Krynn' : ''}${formatPrerequisites(featEntry.prereqs)}</span>
     </label>
   `).join('');
@@ -925,6 +1445,7 @@ const spellRuleSummaries = {
 };
 
 const weaponRuleSummaries = {
+  'No Weapon': 'The character is not holding a manufactured weapon. Use an unarmed strike for attacks; typical damage is 1d3 for a Medium creature or 1d2 for a Small creature.',
   Longsword: 'Martial one-handed melee weapon. Typical damage is 1d8, with a 19–20 critical threat range and a 5-foot reach.',
   Shortsword: 'Light martial melee weapon. Typical damage is 1d6, with a 19–20 critical threat range and a 5-foot reach.',
   Greatsword: 'Two-handed martial melee weapon. Typical damage is 2d6, with a 19–20 critical threat range and a 5-foot reach.',
@@ -945,6 +1466,7 @@ const weaponRuleSummaries = {
 };
 
 const armorRuleSummaries = {
+  'No Armor': 'The character is unarmored and receives no armor bonus to AC. Dexterity, natural armor, shields, and other effects may still apply.',
   'Padded Armor': 'Light armor that grants a +1 armor bonus to AC. It is flexible but noisy and has a substantial armor check penalty.',
   'Leather Armor': 'Light armor that grants a +2 armor bonus to AC and allows relatively good mobility.',
   'Studded Leather': 'Light armor reinforced with studs that grants a +3 armor bonus to AC.',
@@ -960,9 +1482,9 @@ const armorRuleSummaries = {
 
 function updateEquipmentRuleTriggers() {
   els.weaponRulesTrigger.dataset.ruleName = state.weapon;
-  els.weaponRulesTrigger.textContent = `View ${state.weapon} rules`;
+  els.weaponRulesTrigger.textContent = `View ${getEnhancedWeaponName()} rules`;
   els.armorRulesTrigger.dataset.ruleName = state.armor;
-  els.armorRulesTrigger.textContent = `View ${state.armor} rules`;
+  els.armorRulesTrigger.textContent = `View ${getEnhancedArmorName()} rules`;
 }
 
 function getRuleDescription(type, name) {
@@ -988,6 +1510,39 @@ function getRuleDescription(type, name) {
   return `${spellRuleSummaries[name] || `${name} is a level ${spell?.level ?? '?'} spell in this builder's catalog. Consult your licensed 3.5 reference for its exact casting time, range, duration, saving throw, and components.`} Spell level: ${spell?.level ?? '?'}.`;
 }
 
+function rollHitDie(sides) {
+  return Math.floor(Math.random() * sides) + 1;
+}
+
+function ensureHitPointRolls() {
+  const entries = getClassLevelEntries();
+  const rolls = Array.isArray(state.hpRolls) ? state.hpRolls : [];
+  let levelNumber = 0;
+  entries.forEach((entry) => {
+    for (let classLevel = 1; classLevel <= entry.levels; classLevel += 1) {
+      if (!rolls[levelNumber]) {
+        rolls[levelNumber] = {
+          classId: entry.classId,
+          classLevel,
+          roll: levelNumber === 0 ? entry.classData.hitDie : rollHitDie(entry.classData.hitDie),
+          maximum: entry.classData.hitDie
+        };
+      }
+      levelNumber += 1;
+    }
+  });
+  if (!(state.levelUpPending && state.hpRollPending)) state.hpRolls = rolls.slice(0, levelNumber);
+  return state.hpRolls;
+}
+
+function getHitPointProgression() {
+  const conModifier = getAbilityModifiers().con;
+  const allRolls = ensureHitPointRolls();
+  const rolls = state.levelUpPending && state.hpRollPending ? allRolls.slice(0, Math.max(0, allRolls.length - 1)) : allRolls;
+  const total = rolls.reduce((sum, entry) => sum + Math.max(1, Number(entry.roll || 0) + conModifier), 0);
+  return { total, conModifier, rolls };
+}
+
 function showRulesPopover(trigger) {
   const type = trigger.dataset.ruleType;
   const name = trigger.dataset.ruleName;
@@ -1007,9 +1562,93 @@ function hideRulesPopover() {
   els.rulesPopover.hidden = true;
 }
 
+function validateCharacterCreation() {
+  syncStateFromInputs();
+  const warnings = getRuleWarnings();
+  const remainingChoices = [];
+  if (state.characterCreated && state.levelUpMode) {
+    const starting = state.levelUpStartingClasses || [];
+    const current = getClassLevels();
+    const startingTotals = Object.fromEntries(starting.map((entry) => [entry.classId, entry.levels]));
+    const currentTotals = Object.fromEntries(current.map((entry) => [entry.classId, entry.levels]));
+    const classIds = new Set([...Object.keys(startingTotals), ...Object.keys(currentTotals)]);
+    let addedRanks = 0;
+    classIds.forEach((classId) => {
+      const delta = (currentTotals[classId] || 0) - (startingTotals[classId] || 0);
+      if (delta < 0) warnings.push(`${classId} levels cannot be reduced during level up.`);
+      if (delta > 1) warnings.push(`Only one rank may be added to ${classId} during a single level-up session.`);
+      addedRanks += Math.max(0, delta);
+    });
+    if (addedRanks !== 1) warnings.push(`Level up must add exactly one class rank; current changes add ${addedRanks}.`);
+  }
+  const skillSpent = getSpentSkillPoints();
+  const skillAvailable = getAvailableSkillPoints();
+  const featSelected = state.selectedFeats.length;
+  const featAvailable = getFeatSlots();
+  const spellLevel = getMaxSpellLevel();
+  const selectedClass = getClass();
+  if (skillSpent < skillAvailable) remainingChoices.push(`Skills: ${skillAvailable - skillSpent} rank points remain in the Skills panel.`);
+  if (featSelected < featAvailable) remainingChoices.push(`Feats: ${featAvailable - featSelected} feat choice${featAvailable - featSelected === 1 ? '' : 's'} remain in the Feats panel.`);
+  const abilityIncreasesAvailable = Math.max(0, getAllowedAbilityIncreases() - state.abilityIncreases.length);
+  if (state.hpRollPending) remainingChoices.push('Hit Points: Roll HP for the new level with the Roll HP button in Class Levels.');
+  if (state.characterCreated && abilityIncreasesAvailable > 0) remainingChoices.push(`Ability Scores: ${abilityIncreasesAvailable} level-up ability increase${abilityIncreasesAvailable === 1 ? '' : 's'} remain in the Ability Scores panel.`);
+  if (state.abilityMode === 'point-buy' && getPointBuyTotal() < state.pointBuyBudget) remainingChoices.push(`Ability Scores: ${state.pointBuyBudget - getPointBuyTotal()} point-buy points remain.`);
+  if (selectedClass.spellcaster && getSpellSelectionCapacity() > state.selectedSpells.length) remainingChoices.push(`Spells: ${getSpellSelectionCapacity() - state.selectedSpells.length} spell selection${getSpellSelectionCapacity() - state.selectedSpells.length === 1 ? '' : 's'} remain in the Spells panel.`);
+  const summary = `Skills ${skillSpent}/${skillAvailable}; Feats ${featSelected}/${featAvailable}; Spells ${selectedClass.spellcaster ? `${state.selectedSpells.length} selected through level ${spellLevel}` : 'not applicable'}.`;
+
+  if (warnings.length || remainingChoices.length) {
+    els.completionStatus.className = 'completion-status invalid';
+    els.completionStatus.textContent = `Needs attention: ${[...remainingChoices, ...warnings].join(' ')} ${summary}`;
+    els.summaryCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return false;
+  }
+
+  const confirmationMessage = state.characterCreated
+    ? `Are you sure you want to finalize level ${state.level}? Skills, feats, and spells chosen for this level will be locked.`
+    : 'Are you sure you want to finalize this first-level character? Ability scores, identity, and initial choices will be locked.';
+  if (!window.confirm(confirmationMessage)) {
+    els.completionStatus.className = 'completion-status';
+    els.completionStatus.textContent = 'Character remains editable until you confirm creation.';
+    return false;
+  }
+
+  els.completionStatus.className = 'completion-status valid';
+  els.completionStatus.textContent = `Character passes current checks. ${summary}`;
+  state.characterCreated = true;
+  state.finalizedLevel = state.level;
+  state.levelUpMode = false;
+  state.hpRollPending = false;
+  state.levelUpStartingClasses = null;
+  state.levelUpPending = false;
+  state.hpRollPending = false;
+  state.levelUpStartingHpRolls = null;
+  updateCreationButtonLabel();
+  renderClassLevels();
+  saveCharacterToStorage();
+  return true;
+}
+
+function updateCreationButtonLabel() {
+  els.completeCharacterBtn.textContent = 'Create Character';
+}
+
+function showPrintPreview() {
+  els.printPreviewContent.innerHTML = document.querySelector('.sheet-output').innerHTML;
+  els.printPreviewModal.hidden = false;
+  els.closePrintPreviewBtn.focus();
+}
+
+function hidePrintPreview() {
+  els.printPreviewModal.hidden = true;
+}
+
 function renderSpells() {
   const maxSpellLevel = getMaxSpellLevel();
   const selectedClass = getClass();
+  const choicesLocked = state.characterCreated && state.level <= state.finalizedLevel;
+  const slotTable = selectedClass.spellcaster ? (spellSlotsTable[Math.min(state.level, 20)] || []).slice(0, maxSpellLevel) : [];
+  const totalSlots = slotTable.reduce((total, slots) => total + slots, 0);
+  const knownTable = spellsKnownTable[selectedClass.id]?.[Math.min(state.level, 10)];
   const availableSpells = selectedClass.spellcaster
     ? spellCatalog.filter((spell) => spell.level <= maxSpellLevel)
     : [];
@@ -1017,13 +1656,20 @@ function renderSpells() {
   state.selectedSpells = state.selectedSpells.filter((spellName) => availableNames.has(spellName));
 
   if (!availableSpells.length) {
+    els.spellsHeading.textContent = 'Spells [0/0]';
+    els.spellCapacityInfo.textContent = 'This class and level currently have no spell selections available.';
     els.spellList.innerHTML = '<p class="language-empty">No spells are currently available for this class and level.</p>';
     return;
   }
 
+  els.spellsHeading.textContent = knownTable ? `Spells [${state.selectedSpells.length} selected]` : `Spells [${state.selectedSpells.length}/${totalSlots} slots]`;
+  els.spellCapacityInfo.textContent = knownTable
+    ? `Spells known: ${knownTable.map((known, level) => `${level === 0 ? '0-level' : `${level}${level === 1 ? 'st' : level === 2 ? 'nd' : level === 3 ? 'rd' : 'th'}-level`} ${known}`).join(' · ')}. Spell slots: ${slotTable.map((slots, level) => `${level + 1}${level === 0 ? 'st' : 'th'} ${slots}`).join(' · ')}.`
+    : `Selection guide: ${totalSlots} spell slots through spell level ${maxSpellLevel}. ${slotTable.map((slots, level) => `${level + 1}st: ${slots}`).join(' · ')}. Cantrips are listed separately and do not use these slots.`;
+
   els.spellList.innerHTML = availableSpells.map((spell) => `
     <label class="check-item">
-      <input type="checkbox" data-spell="${spell.name}" ${state.selectedSpells.includes(spell.name) ? 'checked' : ''} />
+      <input type="checkbox" data-spell="${spell.name}" ${state.selectedSpells.includes(spell.name) ? 'checked' : ''} ${choicesLocked ? 'disabled' : ''} />
       <span class="rules-trigger" data-rule-type="spell" data-rule-name="${spell.name}" title="Click for rules summary">${spell.name} (lvl ${spell.level})</span>
     </label>
   `).join('');
@@ -1050,6 +1696,9 @@ function renderSummary() {
       <div class="stat-pill"><strong>Fort</strong><br>${fort >= 0 ? '+' : ''}${fort}</div>
       <div class="stat-pill"><strong>Ref</strong><br>${ref >= 0 ? '+' : ''}${ref}</div>
       <div class="stat-pill"><strong>Will</strong><br>${will >= 0 ? '+' : ''}${will}</div>
+      <div class="stat-pill save-pill"><strong>Fortitude Save</strong><br>${fort >= 0 ? '+' : ''}${fort}<small>Constitution · physical threats</small></div>
+      <div class="stat-pill save-pill"><strong>Reflex Save</strong><br>${ref >= 0 ? '+' : ''}${ref}<small>Dexterity · area effects</small></div>
+      <div class="stat-pill save-pill"><strong>Will Save</strong><br>${will >= 0 ? '+' : ''}${will}<small>Wisdom · mental effects</small></div>
       <div class="stat-pill"><strong>Skills</strong><br>${totalRanks}/${maxRanks} ranks</div>
       <div class="stat-pill"><strong>Feats</strong><br>${state.selectedFeats.length}/${getFeatSlots()} slots</div>
       <div class="stat-pill"><strong>Setting</strong><br>${state.setting === 'dragonlance' ? 'Dragonlance' : 'Core 3.5'}</div>
@@ -1065,6 +1714,7 @@ function renderSummary() {
 
 function renderPlayerSheet() {
   const { race, selectedClass, mods, hp, bab, initiative, fort, ref, will, ac } = deriver();
+  const hpProgression = getHitPointProgression().rolls.map((entry, index) => `L${index + 1}: d${entry.maximum} roll ${entry.roll}`).join(' | ');
   const statsList = abilityNames.map((ability) => `${ability.toUpperCase()}: ${state.abilities[ability]} (${mods[ability] >= 0 ? '+' : ''}${mods[ability]})`).join(' | ');
   const selectedFeatText = state.selectedFeats.length ? state.selectedFeats.join(', ') : 'None';
   const skillListHtml = state.selectedSkills.length ? state.selectedSkills.map((skill) => `<li>${skill}: ${getSkillTotal(skill) >= 0 ? '+' : ''}${getSkillTotal(skill)}</li>`).join('') : '<li>None</li>';
@@ -1072,12 +1722,15 @@ function renderPlayerSheet() {
   const speed = getSpeed();
   const weaponStats = getWeaponStats();
   const senses = `Low-light vision${race.name === 'Elf' ? ', keen senses' : ''}${race.name === 'Dwarf' ? ', darkvision' : ''}${race.name === 'Half-Orc' ? ', darkvision' : ''}`;
-  const encumbrance = `${getCarryCapacity()} lb. carry capacity`;
+  const carry = getCarryCapacity();
+  const encumbrance = `${carry.heavy} lb. heavy load capacity`;
   const notes = `${selectedFeatText}; ${state.selectedSpells.length ? state.selectedSpells.join(', ') : 'No spells prepared'}; ${encumbrance}`;
   const prestigeClass = getPrestigeClass();
   const settingNotes = state.setting === 'dragonlance'
     ? `<p><strong>Krynn:</strong> ${state.krynnPath} / ${state.moon}${prestigeClass ? ` / ${prestigeClass.name}` : ''}</p>`
     : '';
+  const possessedWeapons = state.weaponInventory?.length ? state.weaponInventory : [state.weapon];
+  const possessedArmor = state.armorInventory?.length ? state.armorInventory : [state.armor];
 
   els.playerSheet.classList.add('active');
   els.playerSheet.innerHTML = `
@@ -1107,7 +1760,7 @@ function renderPlayerSheet() {
           <h4>Attack</h4>
           <p><strong>Base Attack</strong> +${bab}</p>
           <p><strong>Initiative</strong> ${initiative >= 0 ? '+' : ''}${initiative}</p>
-          <p><strong>Weapon</strong> ${state.weapon}</p>
+          <p><strong>Weapon</strong> ${getEnhancedWeaponName()}</p>
           <p><strong>Weapon Size</strong> ${weaponStats.weaponSize}</p>
           <p><strong>Attack Bonus</strong> +${weaponStats.attack}</p>
           <p><strong>Base Damage</strong> ${weaponStats.baseDamage}</p>
@@ -1121,6 +1774,8 @@ function renderPlayerSheet() {
           <p>Fort ${fort >= 0 ? '+' : ''}${fort}</p>
           <p>Ref ${ref >= 0 ? '+' : ''}${ref}</p>
           <p>Will ${will >= 0 ? '+' : ''}${will}</p>
+          <p><strong>HP</strong> ${hp}</p>
+          <p><strong>HP Rolls</strong> ${hpProgression}</p>
           <p><strong>Speed</strong> ${speed} ft.</p>
           <p><strong>Carry</strong> ${encumbrance}</p>
         </div>
@@ -1152,8 +1807,8 @@ function renderPlayerSheet() {
         <div class="sheet-box">
           <h4>Equipment</h4>
           <ul>
-            <li>${state.weapon}</li>
-            <li>${state.armor}</li>
+            <li>${getEnhancedWeaponName()}</li>
+            <li>${getEnhancedArmorName()}</li>
             <li>${state.item}</li>
           </ul>
         </div>
@@ -1186,13 +1841,20 @@ function renderPlayerSheet() {
           <div class="sheet-box">
             <h4>Weapons</h4>
             <table class="official-table">
-              <thead><tr><th>Name</th><th>Attack</th><th>Base Damage</th><th>Size-Adjusted Damage</th><th>Critical</th><th>Range</th></tr></thead>
-              <tbody><tr><td>${state.weapon} (${weaponStats.weaponSize})</td><td>${weaponStats.attack >= 0 ? '+' : ''}${weaponStats.attack}</td><td>${weaponStats.baseDamage}</td><td>${weaponStats.damage}<br><small>${weaponStats.sizeAdjustment}</small></td><td>${weaponStats.crit}</td><td>${weaponStats.range}</td></tr></tbody>
+                <thead><tr><th>Active</th><th>Name</th><th>Description</th><th>Damage Type</th><th>Proficiency</th><th>Attack</th><th>Base Damage</th><th>Size-Adjusted Damage</th><th>Critical</th><th>Range</th></tr></thead>
+                <tbody>${possessedWeapons.map((weapon) => {
+                  const stats = getWeaponStats(weapon);
+                  const damageType = getWeaponDamageType(weapon);
+                  const description = weapon === state.weapon ? `${getEnhancedWeaponName()}: ${state.weaponAbility === 'none' ? 'no special ability' : getWeaponAbilityDescription(state.weaponAbility)}` : (weaponRuleSummaries[weapon] || 'Standard weapon; select it to calculate current attack and damage.');
+                  return `<tr><td><input type="checkbox" class="active-weapon-checkbox" data-active-weapon="${weapon}" ${weapon === state.weapon ? 'checked' : ''} /></td><td>${weapon} (${stats.weaponSize})</td><td>${description}</td><td>${damageType}</td><td>${isWeaponProficient(weapon) ? 'Proficient' : 'Not proficient'}</td><td>${stats.attack >= 0 ? '+' : ''}${stats.attack}</td><td>${stats.baseDamage}</td><td>${stats.damage}<br><small>${stats.sizeAdjustment}</small></td><td>${stats.crit}</td><td>${stats.range}</td></tr>`;
+                }).join('')}</tbody>
             </table>
           </div>
           <div class="sheet-box">
             <h4>Armor & Defense</h4>
-            <p>Armor: ${state.armor}</p>
+            <p><strong>Active Armor:</strong> ${getEnhancedArmorName()}</p>
+            <p>${state.armorAbility === 'none' ? (armorRuleSummaries[state.armor] || 'Standard armor or shield; select it to calculate current AC and movement.') : getArmorAbilityDescription(state.armorAbility)}</p>
+            <ul>${possessedArmor.map((item) => `<li>${item}${item === state.armor ? ' (active)' : ''}</li>`).join('')}</ul>
             <p>Armor Class: ${ac}</p>
             <p>Touch AC: ${10 + mods.dex}</p>
             <p>Flat-Footed AC: ${ac - Math.max(0, mods.dex)}</p>
@@ -1203,12 +1865,14 @@ function renderPlayerSheet() {
         <div class="sheet-grid official-wide-grid">
           <div class="sheet-box">
             <h4>Equipment & Possessions</h4>
-            <ul><li>${state.weapon}</li><li>${state.armor}</li><li>${state.item}</li><li>Backpack contents: ____________________</li><li>Other possessions: ____________________</li></ul>
+            <ul>${(state.weaponInventory || [state.weapon]).map((weapon) => `<li>${weapon}${weapon === state.weapon ? ' (active)' : ''}</li>`).join('')} ${(state.armorInventory || [state.armor]).map((item) => `<li>${item}${item === state.armor ? ' (active)' : ''}</li>`).join('')} ${(state.magicInventory || []).map((item) => `<li>${item}</li>`).join('')}<li>${state.item}</li><li>Backpack contents: ____________________</li><li>Other possessions: ____________________</li></ul>
           </div>
           <div class="sheet-box">
             <h4>Money</h4>
             <p>Platinum: ______ &nbsp; Gold: ______</p><p>Silver: ______ &nbsp; Copper: ______</p>
-            <p>Carrying capacity: ${encumbrance}</p><p>Load: ____________________</p>
+            <p>Light load: ${carry.light} lb. &nbsp; Medium: ${carry.medium} lb.</p>
+            <p>Heavy/max load: ${carry.heavy} lb. &nbsp; Lift overhead: ${carry.liftOverhead} lb.</p>
+            <p>Lift off ground: ${carry.liftGround} lb. &nbsp; Drag: ${carry.drag} lb.</p>
           </div>
         </div>
         <div class="sheet-box official-notes-box"><h4>Combat Notes</h4><p>Grapple: ${bab + mods.str >= 0 ? '+' : ''}${bab + mods.str} &nbsp; Initiative: ${initiative >= 0 ? '+' : ''}${initiative} &nbsp; Speed: ${speed} ft.</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
@@ -1294,15 +1958,19 @@ function renderItemSheet() {
     <div class="sheet-grid">
       <div class="sheet-box">
         <h4>Weapons</h4>
-        <p>${state.weapon} (${getWeaponStats().weaponSize})</p>
+        <p>${getEnhancedWeaponName()} (${getWeaponStats().weaponSize})</p>
       </div>
       <div class="sheet-box">
         <h4>Armor</h4>
-        <p>${state.armor}</p>
+        <p>${getEnhancedArmorName()}</p>
       </div>
       <div class="sheet-box">
         <h4>Gear</h4>
         <p>${state.item}</p>
+      </div>
+      <div class="sheet-box">
+        <h4>Magic Items</h4>
+        <ul>${(state.magicInventory || []).map((item) => `<li>${item}</li>`).join('') || '<li>None</li>'}</ul>
       </div>
     </div>
   `;
@@ -1343,6 +2011,9 @@ function renderSketchSheet() {
   const costumeDetails = selectedClass.id === 'wizard' || selectedClass.id === 'sorcerer'
     ? '<path d="M174 163 Q200 182 226 163 M165 205 Q200 222 235 205 M157 255 Q200 270 243 255" /><path d="M192 174 L200 188 L208 174" />'
     : '<path d="M168 165 Q200 185 232 165 M163 208 L237 208 M177 238 L223 238" /><path d="M181 154 L181 268 M219 154 L219 268" />';
+  const sketchMarkup = state.customPortrait
+    ? `<img class="custom-character-portrait" src="${state.customPortrait}" alt="${state.charName} portrait" />`
+    : `<svg class="character-sketch" viewBox="0 0 400 470" role="img" aria-label="Generalized ${race.name} ${selectedClass.name} character sketch">`;
 
   els.sketchSheet.classList.add('active');
   els.sketchSheet.innerHTML = `
@@ -1353,14 +2024,30 @@ function renderSketchSheet() {
       </div>
       <div class="sketch-layout">
         <div class="sketch-paper">
-          <svg class="character-sketch" viewBox="0 0 400 470" role="img" aria-label="Generalized ${race.name} ${selectedClass.name} character sketch">
+          ${sketchMarkup}
+          ${state.customPortrait ? '' : `
             <defs>
               <pattern id="sketchGrid" width="22" height="22" patternUnits="userSpaceOnUse"><path d="M22 0H0V22" fill="none" stroke="#34383d" stroke-opacity=".045" /></pattern>
               <pattern id="inkHatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(24)"><path d="M0 0V8" stroke="#34383d" stroke-opacity=".12" /></pattern>
+              <radialGradient id="skinTone" cx="35%" cy="24%" r="78%"><stop offset="0" stop-color="#fffaf0" /><stop offset=".72" stop-color="#d7c4aa" /><stop offset="1" stop-color="#9a826c" /></radialGradient>
+              <linearGradient id="clothTone" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6c7379" /><stop offset=".5" stop-color="#30363b" /><stop offset="1" stop-color="#171b1e" /></linearGradient>
+              <linearGradient id="metalTone" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3f0e8" /><stop offset=".28" stop-color="#a7adb0" /><stop offset=".58" stop-color="#454d52" /><stop offset="1" stop-color="#161b1e" /></linearGradient>
+              <filter id="softShadow"><feGaussianBlur stdDeviation="5" /></filter>
             </defs>
             <rect width="400" height="470" fill="#fbf7ee" />
             <rect width="400" height="470" fill="url(#sketchGrid)" />
+            <ellipse cx="205" cy="405" rx="117" ry="18" fill="#34383d" fill-opacity=".16" filter="url(#softShadow)" />
             <path d="M72 407 Q200 375 328 407" fill="none" stroke="${ink}" stroke-opacity=".25" stroke-width="2" />
+            <g class="realistic-render" stroke="none">
+              <path d="M161 78 Q165 48 200 42 Q235 48 239 78 L232 119 Q223 139 200 145 Q177 139 168 119 Z" fill="url(#skinTone)" />
+              <path d="M181 136 Q200 149 219 136 L226 163 L174 163 Z" fill="url(#skinTone)" />
+              <path d="M173 153 Q200 143 227 153 L246 194 Q238 230 234 275 L166 275 Q162 230 154 194 Z" fill="url(#clothTone)" />
+              <path d="M162 165 Q145 175 133 196 L112 256 Q110 267 119 270 L141 211 L158 192 Z" fill="url(#clothTone)" />
+              <path d="M238 165 Q255 175 267 196 L288 256 Q290 267 281 270 L259 211 L242 192 Z" fill="url(#clothTone)" />
+              <path d="M169 272 Q166 324 154 366 L143 397 Q143 406 153 408 L180 408 L172 382 L190 304 Z" fill="url(#clothTone)" />
+              <path d="M231 272 Q234 324 246 366 L257 397 Q257 406 247 408 L220 408 L228 382 L210 304 Z" fill="url(#clothTone)" />
+              <path d="M172 153 Q200 143 228 153 L241 190 L159 190 Z" fill="url(#metalTone)" fill-opacity=".78" />
+            </g>
             <g fill="none" stroke="${ink}" stroke-linecap="round" stroke-linejoin="round">
               <path d="M166 118 Q170 143 160 157 M234 118 Q230 143 240 157" stroke-width="3" />
               ${raceCue}
@@ -1382,7 +2069,7 @@ function renderSketchSheet() {
             </g>
             <text x="200" y="440" text-anchor="middle" fill="${ink}" font-size="12" letter-spacing="1">${race.name.toUpperCase()} / ${selectedClass.name.toUpperCase()}</text>
             <text x="200" y="456" text-anchor="middle" fill="${ink}" fill-opacity=".68" font-size="10">${classDetail.toUpperCase()}</text>
-          </svg>
+          </svg>`}
         </div>
         <div class="sketch-notes">
           <div class="sheet-box"><h4>Visual Profile</h4><p><strong>Race:</strong> ${race.name}</p><p><strong>Class:</strong> ${selectedClass.name}</p><p><strong>Presentation:</strong> ${genderLabel}</p><p><strong>Size:</strong> ${race.size}</p></div>
@@ -1431,6 +2118,7 @@ function renderAllSheets() {
   renderSpellSheet();
   renderItemSheet();
   renderSketchSheet();
+  renderDeedsSheet();
 }
 
 function exportCharacter() {
@@ -1457,24 +2145,47 @@ function exportCharacter() {
 function applyCharacterData(data) {
   if (!data || typeof data !== 'object') return;
 
+  state.characterId = data.characterId || state.characterId;
   state.charName = data.charName || 'Unnamed Hero';
   state.playerName = data.playerName || 'Player';
   state.raceId = data.raceId || 'human';
   state.classId = data.classId || 'fighter';
   state.level = Number(data.level || 1);
+  state.characterCreated = Boolean(data.characterCreated || state.level > 1);
+  state.finalizedLevel = Number(data.finalizedLevel || (state.characterCreated ? state.level : 0));
+  state.levelUpMode = false;
+  state.levelUpStartingClasses = null;
+  state.levelUpPending = false;
+  state.hpRollPending = false;
+  state.lastLevelSnapshot = data.lastLevelSnapshot || null;
+  updateCreationButtonLabel();
+  state.classLevels = Array.isArray(data.classLevels) && data.classLevels.length
+    ? data.classLevels.map((entry) => ({ classId: entry.classId, levels: Number(entry.levels) || 1 }))
+    : [{ classId: state.classId, levels: state.level }];
+  syncPrimaryClassAndLevel();
   state.alignment = data.alignment || 'Lawful Good';
   state.deity = data.deity || 'None selected';
   state.gender = data.gender || 'unspecified';
+  state.customPortrait = data.customPortrait || '';
   state.abilityMode = data.abilityMode || 'rolled';
   state.pointBuyBudget = Number(data.pointBuyBudget || 32);
+  state.abilityIncreases = Array.isArray(data.abilityIncreases) ? data.abilityIncreases : [];
+  state.hpRolls = Array.isArray(data.hpRolls) ? data.hpRolls : [];
   state.setting = data.setting || 'core';
   state.krynnPath = data.krynnPath || 'none';
   state.moon = data.moon || 'none';
   state.prestigeClass = data.prestigeClass || 'none';
   state.weapon = data.weapon || 'Longsword';
   state.armor = data.armor || 'Chain Shirt';
+  state.weaponEnhancement = Number(data.weaponEnhancement || 0);
+  state.weaponAbility = data.weaponAbility || 'none';
+  state.armorEnhancement = Number(data.armorEnhancement || 0);
+  state.armorAbility = data.armorAbility || 'none';
   state.weaponSize = data.weaponSize || 'auto';
   state.item = data.item || 'Backpack';
+  state.weaponInventory = Array.isArray(data.weaponInventory) ? [...new Set(data.weaponInventory)] : [state.weapon];
+  state.armorInventory = Array.isArray(data.armorInventory) ? [...new Set(data.armorInventory)] : [state.armor];
+  state.magicInventory = Array.isArray(data.magicInventory) ? [...new Set(data.magicInventory)] : [];
   state.abilities = { ...defaultScores, ...(data.abilities || {}) };
   state.rolledScores = Array.isArray(data.rolledScores) && data.rolledScores.length === abilityNames.length ? data.rolledScores.map(Number) : null;
   state.abilityAssignments = data.abilityAssignments && typeof data.abilityAssignments === 'object'
@@ -1490,7 +2201,21 @@ function applyCharacterData(data) {
   state.selectedFeats = Array.isArray(data.selectedFeats) ? data.selectedFeats : [];
   state.selectedSpells = Array.isArray(data.selectedSpells) ? data.selectedSpells : [];
   state.selectedLanguages = Array.isArray(data.selectedLanguages) ? [...new Set(data.selectedLanguages)] : [];
+  state.deeds = Array.isArray(data.deeds) ? data.deeds.map((deed) => ({ level: Number(deed.level) || 1, text: String(deed.text || '') })) : [];
   state.skillRanks = data.skillRanks || {};
+
+  if ((data.levelUpMode || data.levelUpPending) && state.lastLevelSnapshot) {
+    const snapshot = state.lastLevelSnapshot;
+    state.classLevels = snapshot.classLevels.map((entry) => ({ ...entry }));
+    state.hpRolls = snapshot.hpRolls.map((entry) => ({ ...entry }));
+    state.abilityIncreases = snapshot.abilityIncreases.map((entry) => ({ ...entry }));
+    state.selectedSkills = [...snapshot.selectedSkills];
+    state.selectedFeats = [...snapshot.selectedFeats];
+    state.selectedSpells = [...snapshot.selectedSpells];
+    state.finalizedLevel = snapshot.finalizedLevel;
+    state.lastLevelSnapshot = null;
+    syncPrimaryClassAndLevel();
+  }
 
   els.charName.value = state.charName;
   els.playerName.value = state.playerName;
@@ -1509,12 +2234,19 @@ function applyCharacterData(data) {
   els.prestigeClassSelect.value = state.prestigeClass;
   els.weaponSelect.value = state.weapon;
   els.armorSelect.value = state.armor;
+  els.weaponEnhancementSelect.value = String(state.weaponEnhancement);
+  els.weaponAbilitySelect.value = state.weaponAbility;
+  els.armorEnhancementSelect.value = String(state.armorEnhancement);
+  els.armorAbilitySelect.value = state.armorAbility;
   els.weaponSizeSelect.value = state.weaponSize;
   els.itemSelect.value = state.item;
   updateEquipmentRuleTriggers();
+  renderEquipmentInventory();
 
   renderAbilities();
+  renderClassLevels();
   renderLanguages();
+  renderDeeds();
   renderSkills();
   renderFeats();
   renderSpells();
@@ -1524,15 +2256,27 @@ function applyCharacterData(data) {
 
 function createNewCharacter() {
   const newCharacter = {
+    characterId: (globalThis.crypto?.randomUUID?.() || `character-${Date.now()}-${Math.random().toString(36).slice(2)}`),
     charName: 'Unnamed Hero',
     playerName: 'Player',
     raceId: 'human',
     classId: 'fighter',
+    classLevels: [{ classId: 'fighter', levels: 1 }],
     level: 1,
+    characterCreated: false,
+    finalizedLevel: 0,
+    levelUpStartingClasses: null,
+    levelUpPending: false,
+    levelUpStartingHpRolls: null,
+    pendingLevelClass: 'fighter',
+    levelUpMode: false,
     alignment: 'Lawful Good',
     gender: 'unspecified',
+    customPortrait: '',
     abilityMode: 'rolled',
     pointBuyBudget: 32,
+    abilityIncreases: [],
+    hpRolls: [],
     setting: 'core',
     krynnPath: 'none',
     moon: 'none',
@@ -1544,9 +2288,17 @@ function createNewCharacter() {
     skillRanks: {},
     weapon: 'Longsword',
     armor: 'Chain Shirt',
+    weaponEnhancement: 0,
+    weaponAbility: 'none',
+    armorEnhancement: 0,
+    armorAbility: 'none',
     item: 'Backpack',
+    weaponInventory: ['Longsword'],
+    armorInventory: ['Chain Shirt'],
+    magicInventory: [],
     weaponSize: 'auto',
     selectedLanguages: [],
+    deeds: [],
     deity: 'None selected'
     ,rolledScores: null
     ,abilityAssignments: {}
@@ -1579,6 +2331,8 @@ function syncStateFromInputs() {
   state.raceId = els.raceSelect.value;
   state.classId = els.classSelect.value;
   state.level = Number(els.levelInput.value || 1);
+  updateCreationButtonLabel();
+  if (state.classLevels?.length) state.classLevels[0].classId = state.classId;
   state.alignment = els.alignmentSelect.value;
   state.abilityMode = els.abilityModeSelect.value;
   state.pointBuyBudget = Number(els.pointBuyBudgetSelect.value || 32);
@@ -1591,12 +2345,23 @@ function syncStateFromInputs() {
   state.prestigeClass = els.prestigeClassSelect.value;
   state.weapon = els.weaponSelect.value;
   state.armor = els.armorSelect.value;
+  state.weaponEnhancement = Number(els.weaponEnhancementSelect.value || 0);
+  state.weaponAbility = els.weaponAbilitySelect.value;
+  state.armorEnhancement = Number(els.armorEnhancementSelect.value || 0);
+  state.armorAbility = els.armorAbilitySelect.value;
   state.item = els.itemSelect.value;
+  state.weaponInventory = [...new Set(state.weaponInventory || [])];
+  state.armorInventory = [...new Set(state.armorInventory || [])];
   state.weaponSize = els.weaponSizeSelect.value;
   state.selectedLanguages = [...document.querySelectorAll('[data-language-slot]')]
     .map((input) => input.value)
     .filter(Boolean);
+  state.deeds = [...document.querySelectorAll('[data-deed-text]')].map((input) => ({
+    text: input.value.trim(),
+    level: Number(document.querySelector(`[data-deed-level="${input.dataset.deedText}"]`)?.value || 1)
+  })).filter((deed) => deed.text);
   updateEquipmentRuleTriggers();
+  renderEquipmentInventory();
 
   document.querySelectorAll('[data-ability]').forEach((input) => {
     state.abilities[input.dataset.ability] = Number(input.value || 10);
@@ -1612,6 +2377,7 @@ function syncStateFromInputs() {
   });
 
   renderAbilities();
+  renderClassLevels();
   renderLanguages();
   renderSkills();
   renderFeats();
@@ -1639,28 +2405,180 @@ function bindEvents() {
   });
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') hideRulesPopover();
+    if (event.key === 'Escape') {
+      hideRulesPopover();
+      hidePrintPreview();
+    }
+  });
+
+  els.printPreviewModal.addEventListener('click', (event) => {
+    if (event.target === els.printPreviewModal) hidePrintPreview();
   });
 
   els.charName.addEventListener('input', syncStateFromInputs);
   els.playerName.addEventListener('input', syncStateFromInputs);
   els.raceSelect.addEventListener('change', syncStateFromInputs);
   els.classSelect.addEventListener('change', syncStateFromInputs);
+  els.advancementClassSelect.addEventListener('change', (event) => {
+    state.pendingLevelClass = event.target.value;
+    renderClassLevels();
+    saveCharacterToStorage();
+  });
+  els.addClassLevelBtn.addEventListener('click', () => {
+    if (!state.levelUpMode || state.levelUpPending) return;
+    const classId = state.pendingLevelClass || state.classId;
+    const existing = state.classLevels.find((entry) => entry.classId === classId);
+    if (existing) existing.levels += 1;
+    else state.classLevels.push({ classId, levels: 1 });
+    state.levelUpPending = true;
+    state.hpRollPending = true;
+    state.lastHpRollResult = null;
+    syncPrimaryClassAndLevel();
+    els.classSelect.value = state.classId;
+    els.levelInput.value = String(state.level);
+    renderClassLevels();
+    renderAbilities();
+    renderSkills();
+    renderFeats();
+    renderSpells();
+    renderAllSheets();
+    saveCharacterToStorage();
+  });
+  els.undoLevelBtn.addEventListener('click', () => {
+    if (!state.levelUpPending) return;
+    state.classLevels = (state.levelUpStartingClasses || []).map((entry) => ({ ...entry }));
+    state.hpRolls = (state.levelUpStartingHpRolls || []).map((entry) => ({ ...entry }));
+    state.lastHpRollResult = null;
+    state.levelUpPending = false;
+    state.hpRollPending = false;
+    syncPrimaryClassAndLevel();
+    renderClassLevels();
+    renderAbilities();
+    renderSkills();
+    renderFeats();
+    renderSpells();
+    renderAllSheets();
+    saveCharacterToStorage();
+  });
+  els.rollHpBtn.addEventListener('click', () => {
+    if (!state.hpRollPending) return;
+    const classId = state.pendingLevelClass || state.classId;
+    const classData = classCatalog.find((entry) => entry.id === classId) || classCatalog[0];
+    const classLevel = getClassLevels().find((entry) => entry.classId === classId)?.levels || 1;
+    const previousHpTotal = getHitPointProgression().total;
+    state.lastHpRollResult = { classId, classLevel, roll: rollHitDie(classData.hitDie), maximum: classData.hitDie };
+    const baselineRolls = state.levelUpStartingHpRolls || state.hpRolls || [];
+    state.hpRolls = [...baselineRolls, state.lastHpRollResult];
+    state.hpRollPending = false;
+    const conModifier = getAbilityModifiers().con;
+    const actualHpTotal = getHitPointProgression().total;
+    els.hpRollResult.textContent = `HP roll: d${state.lastHpRollResult.maximum} = ${state.lastHpRollResult.roll}. Constitution modifier: ${conModifier >= 0 ? '+' : ''}${conModifier}. HP gained: ${actualHpTotal - previousHpTotal}. Total HP: ${actualHpTotal}.`;
+    renderClassLevels();
+    renderAllSheets();
+    saveCharacterToStorage();
+  });
   els.levelInput.addEventListener('input', syncStateFromInputs);
   els.alignmentSelect.addEventListener('change', syncStateFromInputs);
   els.abilityModeSelect.addEventListener('change', () => setAbilityMode(els.abilityModeSelect.value));
   els.pointBuyBudgetSelect.addEventListener('change', syncStateFromInputs);
   els.deitySelect.addEventListener('change', syncStateFromInputs);
   els.genderSelect.addEventListener('change', syncStateFromInputs);
+  els.portraitInput.addEventListener('change', (event) => {
+    const [file] = event.target.files || [];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      window.alert('Please choose an image smaller than 5 MB.');
+      event.target.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      state.customPortrait = String(reader.result || '');
+      renderSketchSheet();
+      saveCharacterToStorage();
+    };
+    reader.readAsDataURL(file);
+  });
+  els.choosePortraitBtn.addEventListener('click', () => els.portraitInput.click());
+  els.clearPortraitBtn.addEventListener('click', () => {
+    state.customPortrait = '';
+    els.portraitInput.value = '';
+    renderSketchSheet();
+    saveCharacterToStorage();
+  });
   els.settingSelect.addEventListener('change', syncStateFromInputs);
   els.krynnPathSelect.addEventListener('change', syncStateFromInputs);
   els.moonSelect.addEventListener('change', syncStateFromInputs);
   els.prestigeClassSelect.addEventListener('change', syncStateFromInputs);
   els.weaponSelect.addEventListener('change', syncStateFromInputs);
+  els.weaponEnhancementSelect.addEventListener('change', syncStateFromInputs);
+  els.weaponAbilitySelect.addEventListener('change', syncStateFromInputs);
   els.weaponSizeSelect.addEventListener('change', syncStateFromInputs);
   els.armorSelect.addEventListener('change', syncStateFromInputs);
+  els.armorEnhancementSelect.addEventListener('change', syncStateFromInputs);
+  els.armorAbilitySelect.addEventListener('change', syncStateFromInputs);
   els.itemSelect.addEventListener('change', syncStateFromInputs);
+  els.addWeaponBtn.addEventListener('click', () => {
+    state.weaponInventory = [...new Set([...(state.weaponInventory || []), state.weapon])];
+    renderEquipmentInventory();
+    renderAllSheets();
+    saveCharacterToStorage();
+  });
+  els.addArmorBtn.addEventListener('click', () => {
+    state.armorInventory = [...new Set([...(state.armorInventory || []), state.armor])];
+    renderEquipmentInventory();
+    renderAllSheets();
+    saveCharacterToStorage();
+  });
+  els.addMagicItemBtn.addEventListener('click', () => {
+    state.magicInventory = [...new Set([...(state.magicInventory || []), els.magicItemSelect.value])];
+    renderEquipmentInventory();
+    renderAllSheets();
+    saveCharacterToStorage();
+  });
+  els.equipmentInventory.addEventListener('click', (event) => {
+    const weaponIndex = event.target.dataset.removeWeapon;
+    const armorIndex = event.target.dataset.removeArmor;
+    const magicIndex = event.target.dataset.removeMagic;
+    if (weaponIndex !== undefined) {
+      const removedWeapon = state.weaponInventory.splice(Number(weaponIndex), 1)[0];
+      if (removedWeapon === state.weapon) {
+        state.weapon = state.weaponInventory[0] || 'No Weapon';
+        els.weaponSelect.value = state.weapon;
+        updateEquipmentRuleTriggers();
+      }
+    }
+    if (armorIndex !== undefined) {
+      const removedArmor = state.armorInventory.splice(Number(armorIndex), 1)[0];
+      if (removedArmor === state.armor) {
+        state.armor = state.armorInventory[0] || 'No Armor';
+        els.armorSelect.value = state.armor;
+        updateEquipmentRuleTriggers();
+      }
+    }
+    if (magicIndex !== undefined) state.magicInventory.splice(Number(magicIndex), 1);
+    renderEquipmentInventory();
+    renderAllSheets();
+    saveCharacterToStorage();
+  });
   els.languagesList.addEventListener('change', syncStateFromInputs);
+  els.deedsList.addEventListener('input', syncStateFromInputs);
+  els.deedsList.addEventListener('change', syncStateFromInputs);
+  els.deedsList.addEventListener('click', (event) => {
+    const removeIndex = event.target.dataset.removeDeed;
+    if (removeIndex === undefined) return;
+    state.deeds.splice(Number(removeIndex), 1);
+    renderDeeds();
+    renderAllSheets();
+    saveCharacterToStorage();
+  });
+  els.addDeedBtn.addEventListener('click', () => {
+    state.deeds.push({ level: state.level, text: '' });
+    renderDeeds();
+    const newInput = els.deedsList.querySelector(`[data-deed-text="${state.deeds.length - 1}"]`);
+    newInput?.focus();
+    saveCharacterToStorage();
+  });
 
   els.abilities.addEventListener('input', (event) => {
     if (event.target.matches('[data-ability]')) {
@@ -1693,6 +2611,56 @@ function bindEvents() {
   els.skillsList.addEventListener('input', syncStateFromInputs);
   els.featsList.addEventListener('change', syncStateFromInputs);
   els.spellList.addEventListener('change', syncStateFromInputs);
+  els.completeCharacterBtn.addEventListener('click', () => {
+    validateCharacterCreation();
+  });
+  els.levelUpBtn.addEventListener('click', () => {
+    if (state.levelUpMode) {
+      validateCharacterCreation();
+      return;
+    }
+    state.levelUpMode = true;
+    state.lastLevelSnapshot = captureLevelSnapshot();
+    state.levelUpStartingClasses = getClassLevels().map((entry) => ({ ...entry }));
+    state.levelUpStartingHpRolls = (state.hpRolls || []).map((entry) => ({ ...entry }));
+    state.levelUpPending = false;
+    state.pendingLevelClass = state.classId;
+    els.levelUpBtn.textContent = 'Finalize';
+    renderClassLevels();
+    renderAbilities();
+    renderSkills();
+    renderFeats();
+    renderSpells();
+    renderAllSheets();
+    saveCharacterToStorage();
+  });
+  els.undoLastLevelBtn.addEventListener('click', () => {
+    if (!state.lastLevelSnapshot || state.levelUpMode) return;
+    if (window.confirm(`Undo the finalized level ${state.finalizedLevel}? Its class, HP, skills, feats, spells, and ability increase changes will be reverted.`)) {
+      restoreLevelSnapshot(state.lastLevelSnapshot);
+    }
+  });
+  els.applyAbilityIncreaseBtn.addEventListener('click', () => {
+    if (!state.characterCreated || state.abilityIncreases.length >= getAllowedAbilityIncreases()) return;
+    const ability = els.abilityIncreaseSelect.value;
+    state.abilities[ability] = Number(state.abilities[ability] || 10) + 1;
+    state.abilityIncreases.push({ level: Math.floor(state.level / 4) * 4, ability });
+    renderAbilities();
+    renderAllSheets();
+    saveCharacterToStorage();
+  });
+
+  els.playerSheet.addEventListener('change', (event) => {
+    const weapon = event.target.dataset.activeWeapon;
+    if (!weapon) return;
+    state.weapon = weapon;
+    els.weaponSelect.value = weapon;
+    state.weaponInventory = [...new Set([...(state.weaponInventory || []), weapon])];
+    updateEquipmentRuleTriggers();
+    renderEquipmentInventory();
+    renderAllSheets();
+    saveCharacterToStorage();
+  });
 
   els.saveBtn.addEventListener('click', () => {
     syncStateFromInputs();
@@ -1745,11 +2713,17 @@ function bindEvents() {
     renderSketchSheet();
   });
 
+
   els.exportBtn.addEventListener('click', exportCharacter);
   els.loadBtn.addEventListener('click', () => els.importCharacterInput.click());
   els.importCharacterInput.addEventListener('change', loadCharacterFromFile);
 
   els.printBtn.addEventListener('click', () => {
+    showPrintPreview();
+  });
+  els.closePrintPreviewBtn.addEventListener('click', hidePrintPreview);
+  els.printPreviewPrintBtn.addEventListener('click', () => {
+    hidePrintPreview();
     window.print();
   });
 }
@@ -1757,6 +2731,8 @@ function bindEvents() {
 function init() {
   state.skillRanks = {};
   populateSelects();
+  renderClassLevels();
+  renderDeeds();
   renderAbilities();
   renderLanguages();
   renderSkills();

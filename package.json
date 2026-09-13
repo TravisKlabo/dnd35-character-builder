@@ -23,6 +23,7 @@
       "index.html",
       "app.js",
       "styles.css",
+      "dm/**/*",
       "desktop/**/*"
     ],
     "linux": {
