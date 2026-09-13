@@ -23,7 +23,9 @@ function createWindow() {
   window.loadFile(path.join(__dirname, '..', 'index.html'));
 
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
-  window.webContents.on('will-navigate', (event) => event.preventDefault());
+  window.webContents.on('will-navigate', (event, url) => {
+    if (!url.startsWith('file://')) event.preventDefault();
+  });
 }
 
 function createMenu() {
