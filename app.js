@@ -2171,8 +2171,8 @@ function renderPlayerSheet() {
           <div class="sheet-box"><h4>Languages</h4><p>${getAllLanguages().join(', ')}</p></div>
           <div class="sheet-box"><h4>Deity / Allegiance</h4><p>${state.deity}</p><p>${state.setting === 'dragonlance' ? 'Krynn path: ' + state.krynnPath : 'Allegiance: ____________________'}</p></div>
         </div>
-        <div class="sheet-box official-notes-box journal-notes-box"><h4>Character Notes</h4>${state.characterNotes.length ? state.characterNotes.map((note) => `<p>${note}</p>`).join('') : '<p>No character notes recorded.</p>'}<p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
-        <div class="sheet-box official-notes-box journal-notes-box"><h4>Additional Campaign Notes</h4>${state.campaignNotes.length ? state.campaignNotes.map((note) => `<p>${note}</p>`).join('') : '<p>No additional campaign notes recorded.</p>'}<p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
+        <div class="sheet-box official-notes-box journal-notes-box"><h4>Character Notes</h4>${state.characterNotes.map((note) => `<p>${note}</p>`).join('')}<p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
+        <div class="sheet-box official-notes-box journal-notes-box"><h4>Additional Campaign Notes</h4>${state.campaignNotes.map((note) => `<p>${note}</p>`).join('')}<p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
       </div>
     </div>
   `;
