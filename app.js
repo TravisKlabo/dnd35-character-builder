@@ -1239,8 +1239,8 @@ function renderEquipmentInventory() {
     ? `${getEnhancedArmorName()}: +${getArmorBonus()} AC; ${state.armorAbility === 'none' ? 'no special ability' : getArmorAbilityDescription(state.armorAbility)}`
     : (armorRuleSummaries[item] || 'Standard armor or shield; select it to calculate current AC and movement.');
   els.equipmentInventory.innerHTML = `
-    <div class="inventory-group"><strong>Weapons carried</strong>${weapons.length ? weapons.map((weapon, index) => `<div class="inventory-row"><span><strong>${weapon}${weapon === state.weapon ? ' • active' : ''}</strong><small>${weaponDescription(weapon)}</small></span><button type="button" class="remove-inventory-btn" data-remove-weapon="${index}">Remove</button></div>`).join('') : '<small>None</small>'}</div>
-    <div class="inventory-group"><strong>Armor carried</strong>${armor.length ? armor.map((item, index) => `<div class="inventory-row"><span><strong>${item}${item === state.armor ? ' • active' : ''}</strong><small>${armorDescription(item)}</small></span><button type="button" class="remove-inventory-btn" data-remove-armor="${index}">Remove</button></div>`).join('') : '<small>None</small>'}</div>
+    <div class="inventory-group"><strong>Weapons carried</strong>${weapons.length ? weapons.map((weapon, index) => `<div class="inventory-row"><span><strong>${weapon}${weapon === state.weapon ? ' • active' : ''}</strong><small>${weaponDescription(weapon)}</small></span><span class="inventory-actions"><button type="button" class="secondary-btn" data-equip-weapon="${weapon}">${weapon === state.weapon ? 'Unequip' : 'Equip'}</button><button type="button" class="remove-inventory-btn" data-remove-weapon="${index}">Remove</button></span></div>`).join('') : '<small>None</small>'}</div>
+    <div class="inventory-group"><strong>Armor carried</strong>${armor.length ? armor.map((item, index) => `<div class="inventory-row"><span><strong>${item}${item === state.armor ? ' • active' : ''}</strong><small>${armorDescription(item)}</small></span><span class="inventory-actions"><button type="button" class="secondary-btn" data-equip-armor="${item}">${item === state.armor ? 'Unequip' : 'Equip'}</button><button type="button" class="remove-inventory-btn" data-remove-armor="${index}">Remove</button></span></div>`).join('') : '<small>None</small>'}</div>
     <div class="inventory-group"><strong>Magic items carried</strong>${magic.length ? magic.map((item, index) => `<div class="inventory-row"><span><strong>${item}</strong><small>${getMagicItemDescription(item)}</small></span><button type="button" class="remove-inventory-btn" data-remove-magic="${index}">Remove</button></div>`).join('') : '<small>None</small>'}</div>
     <div class="inventory-group"><strong>Other item carried</strong>${state.item !== 'No Item' ? `<div class="inventory-row"><span><strong>${state.item}</strong><small>${getEquipmentPrice(state.item)} - ${getEquipmentWeight(state.item)}</small></span><button type="button" class="remove-inventory-btn" data-remove-item="true">Remove</button></div>` : '<small>None</small>'}</div>
   `;
@@ -2643,6 +2643,18 @@ function bindEvents() {
     const armorIndex = event.target.dataset.removeArmor;
     const magicIndex = event.target.dataset.removeMagic;
     const removeItem = event.target.dataset.removeItem;
+    const equipWeapon = event.target.dataset.equipWeapon;
+    const equipArmor = event.target.dataset.equipArmor;
+    if (equipWeapon !== undefined) {
+      state.weapon = state.weapon === equipWeapon ? 'No Weapon' : equipWeapon;
+      els.weaponSelect.value = state.weapon;
+      updateEquipmentRuleTriggers();
+    }
+    if (equipArmor !== undefined) {
+      state.armor = state.armor === equipArmor ? 'No Armor' : equipArmor;
+      els.armorSelect.value = state.armor;
+      updateEquipmentRuleTriggers();
+    }
     if (weaponIndex !== undefined) {
       const removedWeapon = state.weaponInventory.splice(Number(weaponIndex), 1)[0];
       if (removedWeapon === state.weapon) {

@@ -483,6 +483,12 @@ input, select {
   gap: 3px;
 }
 
+.inventory-actions {
+  display: flex !important;
+  align-items: center;
+  gap: 6px !important;
+}
+
 .inventory-row small {
   color: var(--muted);
   line-height: 1.3;
