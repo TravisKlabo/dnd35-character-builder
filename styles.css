@@ -743,10 +743,6 @@ textarea {
   gap: 12px;
 }
 
-.journal-notes-box {
-  min-height: 420px;
-}
-
 .skills-abilities-grid {
   grid-template-columns: minmax(0, 1fr) fit-content(280px);
 }
