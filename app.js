@@ -2138,6 +2138,9 @@ function renderPlayerSheet() {
           <div class="sheet-box description-list-box racial-traits-box">
             <h4>Racial Traits</h4><ul>${race.traits.map((trait) => `<li><strong>${trait}</strong><small class="sheet-description">${getTraitDescription(trait)}</small></li>`).join('')}</ul>
           </div>
+          <div class="sheet-box languages-box">
+            <h4>Languages</h4><p>${getAllLanguages().join(', ')}</p>
+          </div>
           </div>
         </div>
       </div>
@@ -2159,7 +2162,6 @@ function renderPlayerSheet() {
           <span class="badge">Page 6</span>
         </div>
         <div class="journal-grid">
-          <div class="sheet-box"><h4>Languages</h4><p>${getAllLanguages().join(', ')}</p></div>
           <div class="sheet-box"><h4>Deity / Allegiance</h4><p>${state.deity}</p><p>${state.setting === 'dragonlance' ? 'Krynn path: ' + state.krynnPath : 'Allegiance: ____________________'}</p></div>
         </div>
       </div>
