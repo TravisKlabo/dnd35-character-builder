@@ -457,10 +457,12 @@ const els = {
   equipmentInventory: document.querySelector('#equipmentInventory'),
   summaryCard: document.querySelector('#summaryCard'),
   playerSheet: document.querySelector('#playerSheet'),
+  spellSheet: document.querySelector('#spellSheet'),
   sketchSheet: document.querySelector('#sketchSheet'),
   deedsSheet: document.querySelector('#deedsSheet'),
   rollStatsBtn: document.querySelector('#rollStatsBtn'),
   generatePlayerBtn: document.querySelector('#generatePlayerBtn'),
+  generateSpellBtn: document.querySelector('#generateSpellBtn'),
   generateSketchBtn: document.querySelector('#generateSketchBtn'),
   choosePortraitBtn: document.querySelector('#choosePortraitBtn'),
   saveBtn: document.querySelector('#saveBtn'),
@@ -1391,6 +1393,30 @@ function renderDeedsSheet() {
   `;
 }
 
+function renderSpellSheet() {
+  const selectedSpells = spellCatalog.filter((spell) => state.selectedSpells.includes(spell.name));
+  els.spellSheet.classList.add('active');
+  els.spellSheet.innerHTML = `
+    <div class="official-page spellbook-page">
+      <div class="sheet-header">
+        <h2>${state.charName} - Spellbook & Spell List</h2>
+        <span class="badge">Page 6</span>
+      </div>
+      <div class="sheet-grid official-wide-grid">
+        <div class="sheet-box"><h4>Spellcasting</h4><p>${getSpellSlotSummary()}</p><p>Spell save DC: __________</p><p>Concentration: ${getSkillTotal('Concentration') >= 0 ? '+' : ''}${getSkillTotal('Concentration')}</p><p>Arcane failure: __________</p></div>
+        <div class="sheet-box"><h4>Spell Slots</h4><p>${getSpellSlotSummary()}</p><p>Bonus spells: ____________________</p></div>
+      </div>
+      <div class="sheet-box">
+        <h4>Selected Spells</h4>
+        <table class="official-table"><thead><tr><th>Spell</th><th>Level</th><th>Prepared / Known</th><th>Notes</th></tr></thead><tbody>
+          ${selectedSpells.map((spell) => `<tr><td>${spell.name}</td><td>${spell.level}</td><td>________________</td><td>________________</td></tr>`).join('') || '<tr><td colspan="4">No spells selected</td></tr>'}
+        </tbody></table>
+      </div>
+      <div class="sheet-box official-notes-box"><h4>Spell Notes</h4><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
+    </div>
+  `;
+}
+
 function renderAbilities() {
   const selectedRace = getRace();
   const hasRolledScores = state.abilityMode === 'rolled' && Array.isArray(state.rolledScores) && state.rolledScores.length === abilityNames.length;
@@ -2303,6 +2329,7 @@ function loadCharacterFromStorage() {
 function renderAllSheets() {
   renderSummary();
   renderPlayerSheet();
+  renderSpellSheet();
   renderSketchSheet();
 }
 
@@ -2938,6 +2965,12 @@ function bindEvents() {
     document.querySelectorAll('.sheet-section').forEach((section) => section.classList.remove('active'));
     els.playerSheet.classList.add('active');
     renderPlayerSheet();
+  });
+
+  els.generateSpellBtn.addEventListener('click', () => {
+    document.querySelectorAll('.sheet-section').forEach((section) => section.classList.remove('active'));
+    els.spellSheet.classList.add('active');
+    renderSpellSheet();
   });
 
   els.generateSketchBtn.addEventListener('click', () => {
