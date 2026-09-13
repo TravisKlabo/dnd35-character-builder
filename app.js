@@ -195,6 +195,31 @@ function getEquipmentWeight(item) {
   return equipmentWeights[item] || 'weight varies';
 }
 
+function getWeightInPounds(weightLabel) {
+  const value = String(weightLabel || '').match(/[\d.]+(?:\/\d+)?/);
+  if (!value) return null;
+  if (value[0].includes('/')) {
+    const [numerator, denominator] = value[0].split('/').map(Number);
+    return denominator ? numerator / denominator : null;
+  }
+  return Number(value[0]);
+}
+
+function getCarriedWeight() {
+  const carriedItems = [
+    ...(state.weaponInventory || []),
+    ...(state.armorInventory || []),
+    ...(state.magicInventory || []),
+    state.item
+  ].filter(Boolean);
+  return carriedItems.reduce((result, item) => {
+    const weight = getWeightInPounds(getEquipmentWeight(item));
+    if (weight === null) result.unknown += 1;
+    else result.total += weight;
+    return result;
+  }, { total: 0, unknown: 0 });
+}
+
 function formatEquipmentOption(item) {
   return `${item} - ${getEquipmentPrice(item)} - ${getEquipmentWeight(item)}`;
 }
@@ -1708,6 +1733,8 @@ function renderSummary() {
   const totalRanks = getSpentSkillPoints();
   const maxRanks = getAvailableSkillPoints();
   const spellSummary = getSpellSlotSummary();
+  const carriedWeight = getCarriedWeight();
+  const carriedWeightLabel = `${Number(carriedWeight.total.toFixed(1))} lb.${carriedWeight.unknown ? ` + ${carriedWeight.unknown} item weight${carriedWeight.unknown === 1 ? '' : 's'} varies` : ''}`;
 
   const summaryHtml = `
     <h3>Character Summary</h3>
@@ -1728,6 +1755,7 @@ function renderSummary() {
       <div class="stat-pill save-pill"><strong>Will Save</strong><br>${will >= 0 ? '+' : ''}${will}<small>Wisdom · mental effects</small></div>
       <div class="stat-pill"><strong>Skills</strong><br>${totalRanks}/${maxRanks} ranks</div>
       <div class="stat-pill"><strong>Feats</strong><br>${state.selectedFeats.length}/${getFeatSlots()} slots</div>
+      <div class="stat-pill"><strong>Carried Weight</strong><br>${carriedWeightLabel}</div>
       <div class="stat-pill"><strong>Setting</strong><br>${state.setting === 'dragonlance' ? 'Dragonlance' : 'Core 3.5'}</div>
     </div>
     <div class="warnings-box">
