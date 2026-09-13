@@ -861,9 +861,22 @@ input, select {
 }
 
 @media (min-width: 800px) {
+  .feats-box {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
   .special-abilities-box,
   .racial-traits-box {
     grid-column: 2;
+  }
+
+  .special-abilities-box {
+    grid-row: 2;
+  }
+
+  .racial-traits-box {
+    grid-row: 3;
   }
 }
 
