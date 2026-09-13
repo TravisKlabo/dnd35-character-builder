@@ -706,6 +706,11 @@ input, select {
   grid-template-columns: minmax(0, 1fr) fit-content(280px);
 }
 
+.feats-box {
+  align-self: start;
+  height: fit-content;
+}
+
 .official-table {
   width: 100%;
   border-collapse: collapse;
