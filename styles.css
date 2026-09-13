@@ -703,14 +703,27 @@ input, select {
 }
 
 .combat-grid {
-  grid-template-areas: "weapons money" "armor equipment";
-  grid-template-columns: minmax(0, 2.5fr) minmax(154px, 0.7fr);
+  grid-template-areas: "weapons" "armor";
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .combat-weapons { grid-area: weapons; }
 .combat-money { grid-area: money; }
 .combat-armor { grid-area: armor; }
 .combat-equipment { grid-area: equipment; }
+
+.possessions-grid {
+  grid-template-areas: "money" "equipment";
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.pencil-inventory-lines {
+  margin-top: 18px;
+}
+
+.pencil-inventory-lines p {
+  margin: 0 0 18px;
+}
 
 .skills-abilities-grid {
   grid-template-columns: minmax(0, 1fr) fit-content(280px);
@@ -956,11 +969,6 @@ input, select {
 
   .skills-abilities-grid {
     grid-template-columns: minmax(0, 1fr) minmax(210px, 280px);
-  }
-
-  .combat-grid {
-    grid-template-areas: "weapons" "money" "armor" "equipment";
-    grid-template-columns: minmax(0, 1fr);
   }
 
   .skills-table-columns .official-table {

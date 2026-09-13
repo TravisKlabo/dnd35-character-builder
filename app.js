@@ -2098,10 +2098,16 @@ function renderPlayerSheet() {
             <p>Damage Reduction: ______</p>
             <p>Spell Resistance: ______</p>
           </div>
-          <div class="sheet-box combat-equipment">
-            <h4>Equipment & Possessions</h4>
-            <ul>${(state.weaponInventory || [state.weapon]).map((weapon) => `<li>${weapon}${weapon === state.weapon ? ' (active)' : ''}</li>`).join('')} ${(state.armorInventory || [state.armor]).map((item) => `<li>${item}${item === state.armor ? ' (active)' : ''}</li>`).join('')} ${(state.magicInventory || []).map((item) => `<li>${item}</li>`).join('')}<li>${state.item}</li><li>Backpack contents: ____________________</li><li>Other possessions: ____________________</li></ul>
-          </div>
+        </div>
+        <div class="sheet-box official-notes-box combat-notes-box"><h4>Combat Notes</h4><p>Grapple: ${bab + mods.str >= 0 ? '+' : ''}${bab + mods.str} &nbsp; Initiative: ${initiative >= 0 ? '+' : ''}${initiative} &nbsp; Speed: ${speed} ft.</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
+      </div>
+
+      <div class="official-page official-page-break">
+        <div class="sheet-header">
+          <h2>${state.charName} - Money & Possessions</h2>
+          <span class="badge">Page 3</span>
+        </div>
+        <div class="sheet-grid official-wide-grid possessions-grid">
           <div class="sheet-box combat-money">
             <h4>Money</h4>
             <p>Platinum: ______ &nbsp; Gold: ______</p><p>Silver: ______ &nbsp; Copper: ______</p>
@@ -2109,14 +2115,18 @@ function renderPlayerSheet() {
             <p>Heavy/max load: ${carry.heavy} lb. &nbsp; Lift overhead: ${carry.liftOverhead} lb.</p>
             <p>Lift off ground: ${carry.liftGround} lb. &nbsp; Drag: ${carry.drag} lb.</p>
           </div>
+          <div class="sheet-box combat-equipment">
+            <h4>Equipment & Possessions</h4>
+            <ul>${(state.weaponInventory || [state.weapon]).map((weapon) => `<li>${weapon}${weapon === state.weapon ? ' (active)' : ''}</li>`).join('')} ${(state.armorInventory || [state.armor]).map((item) => `<li>${item}${item === state.armor ? ' (active)' : ''}</li>`).join('')} ${(state.magicInventory || []).map((item) => `<li>${item}</li>`).join('')}<li>${state.item}</li></ul>
+            <div class="pencil-inventory-lines"><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
+          </div>
         </div>
-        <div class="sheet-box official-notes-box"><h4>Combat Notes</h4><p>Grapple: ${bab + mods.str >= 0 ? '+' : ''}${bab + mods.str} &nbsp; Initiative: ${initiative >= 0 ? '+' : ''}${initiative} &nbsp; Speed: ${speed} ft.</p><p>____________________________________________________________</p><p>____________________________________________________________</p></div>
       </div>
 
       <div class="official-page official-page-break">
         <div class="sheet-header">
           <h2>${state.charName} - Skills & Abilities</h2>
-          <span class="badge">Page 3</span>
+          <span class="badge">Page 4</span>
         </div>
         <div class="sheet-grid official-wide-grid skills-abilities-grid">
           <div class="sheet-box">
@@ -2145,7 +2155,7 @@ function renderPlayerSheet() {
       <div class="official-page official-page-break">
         <div class="sheet-header">
           <h2>${state.charName} - Spellbook & Spell List</h2>
-          <span class="badge">Page 4</span>
+          <span class="badge">Page 5</span>
         </div>
         <div class="sheet-grid official-wide-grid">
           <div class="sheet-box"><h4>Spellcasting</h4><p>${spellcastingInfo}</p><p>Spell save DC: __________</p><p>Concentration: ${getSkillTotal('Concentration') >= 0 ? '+' : ''}${getSkillTotal('Concentration')}</p><p>Arcane failure: __________</p></div>
