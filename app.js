@@ -2421,6 +2421,8 @@ function syncStateFromInputs() {
     state.selectedSpells = [];
     state.selectedLanguages = [];
     state.skillRanks = {};
+    state.hpRolls = [];
+    state.lastHpRollResult = null;
   }
   state.charName = els.charName.value || 'Unnamed Hero';
   state.playerName = els.playerName.value || 'Player';
