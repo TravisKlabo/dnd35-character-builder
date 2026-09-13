@@ -38,5 +38,12 @@
       <section id="characterView" class="character-view" hidden></section>
     </main>
     <script src="dm.js?v=open-builder-1"></script>
+    <script>
+      document.querySelector('#viewSelect').addEventListener('change', (event) => {
+        window.location.href = window.location.protocol === 'file:'
+          ? '../index.html'
+          : event.target.value;
+      });
+    </script>
   </body>
 </html>

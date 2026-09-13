@@ -294,7 +294,9 @@
     <script src="app.js?v=sync-1"></script>
     <script>
       document.querySelector('#viewSelect').addEventListener('change', (event) => {
-        window.location.href = event.target.value;
+        window.location.href = window.location.protocol === 'file:'
+          ? 'dm/index.html'
+          : event.target.value;
       });
     </script>
   </body>

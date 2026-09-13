@@ -230,7 +230,7 @@ document.addEventListener('click', (event) => {
     const character = state.characters[Number(openBuilder.dataset.openBuilder)];
     if (character) {
       localStorage.setItem('dnd35-character-builder-v1', JSON.stringify(character));
-      window.location.href = '/';
+      window.location.href = window.location.protocol === 'file:' ? '../index.html' : '/';
     }
     return;
   }
